@@ -21,7 +21,6 @@ influxdb: !include influx.yaml
 utility_meter: !include el-meter.yaml
 template: !include templates.yaml
 rest: !include restful.yaml
-calendar: !include calendars.yaml
 
 ffmpeg:
 
