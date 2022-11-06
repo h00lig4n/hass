@@ -1,0 +1,3 @@
+energy_consumption:
+  source: sensor.el_meter_energy_active_positive
+  cycle: monthly
