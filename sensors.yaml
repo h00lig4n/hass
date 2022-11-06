@@ -1,0 +1,40 @@
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+      - type: memory_use
+      - type: memory_free
+      - type: processor_temperature
+      - type: processor_use
+      - type: swap_use_percent
+      - type: swap_use
+      - type: swap_free
+      - type: load_1m
+      - type: load_5m
+      - type: load_15m
+      - type: last_boot
+  - platform: aarlo
+    monitored_conditions:
+    - total_cameras
+    - last_capture
+    - recent_activity
+    - captured_today
+    - battery_level
+    - signal_strength
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+      - 'date_time'
+      - 'date_time_utc'
+      - 'date_time_iso'
+      - 'time_date'
+      - 'time_utc'
+      - 'beat'
+  - platform: filter
+    name: "HP Total Operation Time"
+    unique_id: ivt_total_op_time_corrected
+    entity_id: sensor.total_operation_time
+    filters:
+      - filter: outlier
+        window_size: 4
+        radius: 2
