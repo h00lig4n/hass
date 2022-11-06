@@ -1,0 +1,103 @@
+sensor:
+# An easily queryable media source.
+  - name: "Node Media Source"
+    unique_id: node_source
+    state: "{{state_attr('media_player.node', 'source')}}"
+# The temperature difference for Brine in and out on the Ground Source Heat Pump
+  - name: "brine_diff"
+    unique_id: ivt_brine_diff
+    unit_of_measurement: '°C'
+    state: "{{ states('sensor.brine_in') | float(0) - states('sensor.brine_out') | float(0) }}"
+# Used to sanitize dodge readings from the Heat Pump
+  - name: "total_heatpump_consumption"
+    unique_id: ivt_total_heatpump_consumption
+    unit_of_measurement: 'kWh'
+    state: "{{ states('sensor.auxillary_consumption_total') | int(0) + states('sensor.compressor_consumption_total') | int(0) }}"
+    state_class: total_increasing
+    device_class: energy
+    icon: mdi:pump
+# This needs changing. Ignore it.
+  - name: "remaining_consumption"
+    unique_id: remaining_consumption
+    unit_of_measurement: 'W'
+    device_class: power
+    state_class: measurement
+    state: "{{ states('sensor.el_meter_power_instant_active_positive') | float(0) - ( states('sensor.heat_pump_power_usage') | float(0) / 1000 + states('sensor.media_room_computer_power_electric_consumption_w') | float(0) / 1000 + states('sensor.dishwasher_power_electric_consumption_w') | float(0) / 1000 + states('sensor.living_room_media_power_electric_consumption_w') | float(0) / 1000) }}"
+# Use this to compare against Tibber price. If it differs by much then oen of them is wrong!
+  - name: Current Nordpool Tibber Estimate
+    unique_id: nordpool_tibber_estimate_now
+    unit_of_measurement: SEK/kWh
+    state_class: measurement
+    state: "{{ states('sensor.nordpool_kwh_se3_sek_3_10_025') | float + 0.095 }}"
+# Calculate max price to consumer electricity. Use percentile of choice (15% currently)
+  - name: Todays Electricity Ceiling
+    unique_id: electricity_15_ceiling_today
+    unit_of_measurement: SEK/kWh
+    state_class: measurement
+    state: >
+        {% set todayPrices = state_attr('sensor.tibber_prices','today') | sort(attribute='total') %}
+        {% set realIndex = states('input_number.electricity_ceiling_percentile') | float * 23 %}
+        {% set index = realIndex | int %}
+        {% set frac = realIndex - index | float %}
+        {% if index + 1 < 23 %}
+        {{ (todayPrices[index].total * (1-frac) + todayPrices[index + 1].total * frac | float) | round(3) }}
+        {%- else -%}
+        {{ todayPrices[index].total | float }}
+        {%- endif %}
+    attributes:
+        hotwatertime: >
+            {% set todayPrices = state_attr('sensor.tibber_prices','today') | sort(attribute='total') %}
+            {% set realIndex = states('input_number.electricity_ceiling_percentile') | float * 23 %}
+            {% set index = realIndex | int %}
+            {% set frac = realIndex - index | float %}
+            {% if index + 1 < 23 %}
+                {% set percentLimit = (todayPrices[index].total * (1-frac) + todayPrices[index + 1].total * frac | float) | round(3)  %}
+            {%- else -%}
+                {% set percentLimit = (todayPrices[index].total | float) | round(3) %}
+            {%- endif %}
+            {% set hwTimesList = state_attr('sensor.tibber_prices','today') | rejectattr('total','>',percentLimit) | sort(attribute='startsAt',reverse=false) | map(attribute='startsAt') | list() %}
+            {% for startTime in hwTimesList if strptime(startTime,'%Y-%m-%dT%H:%M:%S.000%z').hour < 7 %}
+                {% if (loop.last) %}
+                    {{ startTime }}
+                {%- endif %}
+            {% endfor %}
+# Calculate max price to consumer electricity. Use percentile of choice (15% currently)
+  - name: Tomorrows Electricity Ceiling
+    unique_id: electricity_15_ceiling_tomorrow
+    unit_of_measurement : SEK/kWh
+    state_class: measurement
+    state: >
+        {%if state_attr('sensor.tibber_prices','tomorrow') | count > 0  %}
+            {% set tomorrowPrices = state_attr('sensor.tibber_prices','tomorrow') | sort(attribute='total') %}
+            {% set realIndex =  states('input_number.electricity_ceiling_percentile') | float * 23 %}
+            {% set index = realIndex | int %}
+            {% set frac = realIndex - index | float %}
+            {% if index + 1 < 23 %}
+                {{  (tomorrowPrices[index].total * (1-frac) + tomorrowPrices[index + 1].total * frac | float) | round(3) }}
+            {%- else -%}
+                {{  (tomorrowPrices[index].total | float) | round(3) }}
+            {%- endif %}
+        {%- else -%}
+            {{ states('sensor.tomorrows_electricity_ceiling') }}
+        {%- endif %}
+    attributes:
+        hotwatertime: >
+            {%if state_attr('sensor.tibber_prices','tomorrow') | count > 0 %}
+                {% set tomorrowPrices = state_attr('sensor.tibber_prices','tomorrow') | sort(attribute='total') %}
+                {% set realIndex =  states('input_number.electricity_ceiling_percentile') | float * 23 %}
+                {% set index = realIndex | int %}
+                {% set frac = realIndex - index | float %}
+                {% if index + 1 < 23 %}
+                    {% set percentLimit = (tomorrowPrices[index].total * (1-frac) + tomorrowPrices[index + 1].total * frac | float) | round(3) %}
+                {%- else -%}
+                    {% set percentLimit = (tomorrowPrices[index].total | float) | round(3) %}
+                {%- endif %}
+                {% set hwTimesList = state_attr('sensor.tibber_prices','tomorrow') | rejectattr('total','>',percentLimit) | sort(attribute='startsAt',reverse=false) | map(attribute='startsAt') | list() %}
+                {% for startTime in hwTimesList if strptime(startTime,'%Y-%m-%dT%H:%M:%S.000%z').hour < 7 %}
+                    {% if (loop.last) %}
+                        {{ startTime }}
+                    {%- endif %}
+                {% endfor %}
+            {%- else -%}
+                {{ state_attr('sensor.tomorrows_electricity_ceiling','hotwatertime') }}
+            {%- endif %}
