@@ -1,4 +1,5 @@
-binary_sensor:   
+# Refer to https://varmepump.one/docs/h60-manual/home-assistant-integration/
+binary_sensor:
   - name: "Compressor"
     unique_id: ivt_compressor
     state_topic: "+/HP/1A01"
@@ -55,6 +56,7 @@ climate:
     max_temp: 30
     temp_step: .1
 switch:
+# This is used to control Hot Water Production
   - unique_id: ivt_block_water_production_ext2
     name: "Block Water Production"
     state_topic: "+/HP/2234"
@@ -147,6 +149,7 @@ sensor:
     state_topic: "+/HP/3104"   
     unit_of_measurement: "%"
     icon: mdi:flash
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Total Operation Time"
     unique_id: ivt_total_op_time
     state_topic: "+/HP/6C50"
@@ -161,6 +164,7 @@ sensor:
         {% endif %}
     unit_of_measurement: "h"
     icon: mdi:clock
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Compressor Runtime"
     unique_id: ivt_compressor_runtime
     state_topic: "+/HP/6C60"
@@ -175,6 +179,7 @@ sensor:
         {% endif %}
     unit_of_measurement: "h"
     icon: mdi:clock
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Total Energy Supplied"
     unique_id: ivt_total_energy_supplied
     state_topic: "+/HP/5C51"
@@ -190,6 +195,7 @@ sensor:
     device_class: energy    
     unit_of_measurement: "kWh"
     icon: mdi:flash
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Heating Energy Supplied"
     unique_id: ivt_heating_energy_supplied
     state_topic: "+/HP/5C52"
@@ -205,6 +211,7 @@ sensor:
     unit_of_measurement: "kWh"
     device_class: energy
     icon: mdi:flash
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Hot Water Energy Supplied"
     unique_id: ivt_hotwater_energy_supplied
     state_topic: "+/HP/5C53"
@@ -220,6 +227,7 @@ sensor:
     unit_of_measurement: "kWh"
     device_class: energy
     icon: mdi:flash
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Compressor Consumption Total"
     unique_id: ivt_compressor_consumption_total
     state_topic: "+/HP/5C54"
@@ -235,6 +243,7 @@ sensor:
     unit_of_measurement: "kWh"
     device_class: energy
     icon: mdi:pump
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Compressor Consumption Heating"
     unique_id: ivt_compressor_consumption_heating
     state_topic: "+/HP/5C55"
@@ -250,6 +259,7 @@ sensor:
     unit_of_measurement: "kWh"
     device_class: energy
     icon: mdi:pump    
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Compressor Consumption Hot Water"
     unique_id: ivt_compressor_consumption_hotwater
     state_topic: "+/HP/5C56"
@@ -265,6 +275,7 @@ sensor:
     unit_of_measurement: "kWh"
     device_class: energy
     icon: mdi:pump
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Auxillary Consumption Total"
     unique_id: ivt_aux_consumption_total
     state_topic: "+/HP/5C57"
@@ -280,6 +291,7 @@ sensor:
     device_class: energy
     unit_of_measurement: "kWh"
     icon: mdi:flash
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Auxillary Consumption Heating"
     unique_id: ivt_aux_consumption_heating
     state_topic: "+/HP/5C58"
@@ -295,6 +307,7 @@ sensor:
     device_class: energy    
     unit_of_measurement: "kWh"
     icon: mdi:flash
+# Due to crappy values we cannot just trust the sensor value.
   - name: "Auxillary Consumption Hot Water"
     unique_id: ivt_aux_consumption_hotwater
     state_topic: "+/HP/5C59"
