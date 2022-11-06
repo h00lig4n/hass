@@ -1,0 +1,16 @@
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{"query": "query {viewer { homes { currentSubscription { priceInfo { current { total } today {total startsAt} tomorrow {total startsAt}}}}}}"}'
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    scan_interval: 300
+    sensor:
+      - name: Tibber prices
+        unique_id: tibber_prices
+        json_attributes_path: "$.data.viewer.homes[0].currentSubscription.priceInfo"
+        json_attributes: 
+          - today
+          - tomorrow
+        value_template: '{{ value_json["data"]["viewer"]["homes"][0]["currentSubscription"]["priceInfo"]["current"]["total"] }}'
