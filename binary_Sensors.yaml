@@ -1,0 +1,27 @@
+  - platform: group
+    name: Basement Hall Motion Sensors
+    device_class: motion
+    entities:
+      - binary_sensor.basement_hall_north_motion_sensor_on_off
+      - binary_sensor.basement_hall_centre_motion_sensor_on_off
+      - binary_sensor.basement_hall_entrance_motion_sensor_on_off
+  - platform: aarlo
+    monitored_conditions:
+    - motion
+    - connectivity
+  - platform: template
+    sensors:
+      laundry_cam_motion_detection:
+        friendly_name: "Laundry Motion Detection"
+        value_template: "{{ state_attr('camera.laundry_camera_hd', 'motion_detection') == 'on' }}"
+      hall_cam_motion_detection:
+        friendly_name: "Hall Motion Detection"
+        value_template: "{{ state_attr('camera.hall_camera_hd', 'motion_detection') == 'on' }}"
+      kids_week:
+        unique_id: binary_sensor.kids_week
+        friendly_name: Kids Week
+        value_template : "{{ (is_state('binary_sensor.even_week_number','off') and now().isoweekday() < 5) or (is_state('binary_sensor.even_week_number','on') and now().isoweekday() > 4) }}"
+      even_week_number:
+        unique_id: binary_sensor.even_week_number
+        friendly_name: Even Week Number
+        value_template : "{{ not now().strftime('%W') | int % 2 }}"
