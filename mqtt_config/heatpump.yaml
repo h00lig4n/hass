@@ -1,0 +1,318 @@
+binary_sensor:   
+  - name: "Compressor"
+    unique_id: ivt_compressor
+    state_topic: "+/HP/1A01"
+    payload_on: "1"
+    payload_off: "0"
+  - name: "Switch valve"
+    unique_id: ivt_switch_valve
+    state_topic: "+/HP/1A07"
+    payload_on: "1"
+    payload_off: "0"
+  - name: "Brine pump"
+    unique_id: ivt_brine_pump
+    state_topic: "+/HP/1A04"
+    payload_on: "1"
+    payload_off: "0"
+  - name: "Radiator pump"
+    unique_id: ivt_radiator_pump
+    state_topic: "+/HP/1A06"
+    payload_on: "1"
+    payload_off: "0"
+  - name: "Heat carrier pump"
+    unique_id: ivt_heatcarrier_pump
+    state_topic: "+/HP/1A05"
+    payload_on: "1"
+    payload_off: "0"
+  - name: "Alarm"
+    unique_id: ivt_alarm
+    state_topic: "+/HP/1A20"
+    payload_on: "1"
+    payload_off: "0"
+climate:
+  - name: "Room Temp Setpoint"
+    modes:
+    current_temperature_topic: "+/HP/0203"
+    temperature_state_topic: "+/HP/0203"
+    temperature_command_topic: "8cce4efbe9d8/HP/SET/0203"
+    min_temp: 13
+    max_temp: 29
+    temp_step: .5
+  - name: "Heat Set 1, Curve L"
+    modes:
+    current_temperature_topic: "+/HP/0205"
+    temperature_state_topic: "+/HP/0205"
+    temperature_command_topic: "8cce4efbe9d8/HP/SET/0205"
+    min_temp: -100
+    max_temp: 100
+    temp_step: .1
+  - name: "Heat Set 2, Curve R"
+    modes:
+    current_temperature_topic: "+/HP/0206"
+    temperature_state_topic: "+/HP/0206"
+    temperature_command_topic: "8cce4efbe9d8/HP/SET/0206"
+    min_temp: 15
+    max_temp: 30
+    temp_step: .1
+switch:
+  - unique_id: ivt_block_water_production_ext2
+    name: "Block Water Production"
+    state_topic: "+/HP/2234"
+    command_topic: "8cce4efbe9d8/HP/SET/2234"
+    payload_on: "1.00"
+    payload_off: "0.00"
+sensor:
+  - name: "Rad Forward"
+    unique_id: ivt_radiator_forward
+    state_topic: "+/HP/0002"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Heat Carrier Return"
+    unique_id: ivt_heat_carrier_return
+    state_topic: "+/HP/0003"
+    unit_of_measurement: "°C"    
+    icon: mdi:thermometer
+  - name: "Heat Carrier Forward"
+    unique_id: ivt_heat_carrier_forward
+    state_topic: "+/HP/0004" 
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Brine In"
+    unique_id: ivt_brine_in
+    state_topic: "+/HP/0005"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Brine Out"
+    unique_id: ivt_brine_out
+    state_topic: "+/HP/0006"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Outdoor"
+    unique_id: ivt_outdoor_temp
+    state_topic: "+/HP/0007"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Warm water"
+    unique_id: ivt_warm_water
+    state_topic: "+/HP/0009"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Warm water Mid"
+    unique_id: ivt_warm_water_mid
+    state_topic: "+/HP/000A"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer  
+  - name: "Hot gas"
+    unique_id: ivt_hot_gas
+    state_topic: "+/HP/000B"   
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Suction gas"
+    unique_id: ivt_suction_gas
+    state_topic: "+/HP/000C"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Circulation Pump Speed"
+    unique_id: ivt_circulation_pump_speed
+    state_topic: "+/HP/3109"
+    unit_of_measurement: "%"
+    icon: mdi:fan
+  - name: "Brine Pump Speed"
+    unique_id: ivt_brine_pump_speed
+    state_topic: "+/HP/3110"
+    unit_of_measurement: "%"
+    icon: mdi:fan
+  - name: "Compressor Speed"
+    unique_id: ivt_compressor_speed_1
+    state_topic: "+/HP/9108"  
+    unit_of_measurement: "kW"
+    icon: mdi:pump
+  - name: "Compressor Speed"
+    unique_id: ivt_compressor_speed_2
+    state_topic: "+/HP/3108"  
+    unit_of_measurement: "%"
+    icon: mdi:fan
+  - name: "Heating Setpoint"
+    unique_id: ivt_heating_setpoint
+    state_topic: "+/HP/0107"   
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Warm Water Setpoint"
+    unique_id: ivt_warmwater_setpoint
+    state_topic: "+/HP/0111"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+  - name: "Additional electric heater"
+    unique_id: ivt_additional_el_heater
+    state_topic: "+/HP/3104"   
+    unit_of_measurement: "%"
+    icon: mdi:flash
+  - name: "Total Operation Time"
+    unique_id: ivt_total_op_time
+    state_topic: "+/HP/6C50"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "h"
+    icon: mdi:clock
+  - name: "Compressor Runtime"
+    unique_id: ivt_compressor_runtime
+    state_topic: "+/HP/6C60"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "h"
+    icon: mdi:clock
+  - name: "Total Energy Supplied"
+    unique_id: ivt_total_energy_supplied
+    state_topic: "+/HP/5C51"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 20 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy    
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+  - name: "Heating Energy Supplied"
+    unique_id: ivt_heating_energy_supplied
+    state_topic: "+/HP/5C52"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:flash
+  - name: "Hot Water Energy Supplied"
+    unique_id: ivt_hotwater_energy_supplied
+    state_topic: "+/HP/5C53"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:flash
+  - name: "Compressor Consumption Total"
+    unique_id: ivt_compressor_consumption_total
+    state_topic: "+/HP/5C54"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 20 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:pump
+  - name: "Compressor Consumption Heating"
+    unique_id: ivt_compressor_consumption_heating
+    state_topic: "+/HP/5C55"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:pump    
+  - name: "Compressor Consumption Hot Water"
+    unique_id: ivt_compressor_consumption_hotwater
+    state_topic: "+/HP/5C56"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:pump
+  - name: "Auxillary Consumption Total"
+    unique_id: ivt_aux_consumption_total
+    state_topic: "+/HP/5C57"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 20 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+  - name: "Auxillary Consumption Heating"
+    unique_id: ivt_aux_consumption_heating
+    state_topic: "+/HP/5C58"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy    
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+  - name: "Auxillary Consumption Hot Water"
+    unique_id: ivt_aux_consumption_hotwater
+    state_topic: "+/HP/5C59"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+  - name: "Heat Pump Power Usage"
+    unique_id: ivt_power_usage_now
+    state_topic: "8cce4efbe9d8/HP/STATUS/POWERSUM"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: mdi:flash
