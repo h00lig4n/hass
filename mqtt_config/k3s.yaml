@@ -1,0 +1,41 @@
+sensor:
+  - unique_id: cpu_temp_k3s1
+    name: "cpu_temp_k3s1"
+    state_topic: "k3s1/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s1/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s2
+    name: "cpu_temp_k3s2"
+    state_topic: "k3s2/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s2/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s3
+    name: "cpu_temp_k3s3"
+    state_topic: "k3s3/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s3/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s4
+    name: "cpu_temp_k3s4"
+    state_topic: "k3s4/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s4/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s5
+    name: "cpu_temp_k3s5"
+    state_topic: "k3s5/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s5/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
