@@ -1,0 +1,40 @@
+alias: Sunrise Alarm Start
+description: Wakeup with sunrise then music
+trigger:
+  - platform: template
+    value_template: >-
+      {{ states('sensor.time') == (state_attr('input_datetime.wakeup_time',
+      'timestamp') - 30*60)|timestamp_custom('%H:%M', false) }}
+condition:
+  - condition: state
+    entity_id: input_boolean.wakeup
+    state: "on"
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+action:
+  - service: media_player.volume_set
+    data_template:
+      entity_id: media_player.master_bedroom
+      volume_level: 0.1
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.master_bedroom
+    data:
+      media_content_type: music
+      media_content_id: media-source://media_source/local/dawn_chorus.mp3
+  - service: media_player.repeat_set
+    data:
+      repeat: all
+    target:
+      entity_id: media_player.master_bedroom
+  - service: script.1638738968556
+    data: {}
+  - service: script.1638739126885
+    data: {}
+mode: single
+initial_state: true
