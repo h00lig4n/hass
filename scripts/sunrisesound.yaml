@@ -1,0 +1,22 @@
+alias: Sunrise Sound
+sequence:
+  - repeat:
+      while:
+        - condition: template
+          value_template: >-
+            {{ state_attr('media_player.master_bedroom', 'volume_level')  <
+            0.7}}
+      sequence:
+        - service: media_player.volume_set
+          data_template:
+            entity_id: media_player.master_bedroom
+            volume_level: >-
+              {{ state_attr('media_player.master_bedroom', 'volume_level') + 0.1
+              }}
+        - delay:
+            hours: 0
+            minutes: 5
+            seconds: 1
+            milliseconds: 0
+mode: single
+icon: mdi:music-clef-treble
