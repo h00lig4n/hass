@@ -1,0 +1,73 @@
+alias: Electricity Price Consumption Toggle
+description: Toggle's stuff on and off dependent upon current electricity price.
+trigger:
+  - platform: numeric_state
+    entity_id: sensor.electricity_price
+    above: input_number.electricity_ceiling
+    id: expensive
+  - platform: template
+    value_template: >-
+      {{ states('sensor.electricity_price') | float(0) <=
+      states('input_number.electricity_ceiling') | float(0) }}
+    id: cheap
+  - platform: time
+    at: input_datetime.hot_water_generation_time
+    id: scheduled_hot_water
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: cheap
+        sequence:
+          - service: switch.turn_on
+            data: {}
+            target:
+              entity_id: switch.living_room_charger
+          - service: easee.set_charging_cost
+            data:
+              charger_id: MyCarCharger
+              cost_per_kwh: "{{states('sensor.electricity_price') | float }}"
+          - service: easee.set_circuit_dynamic_limit
+            data:
+              device_id: MyCarCharger
+              currentP1: 10
+              time_to_live: 1
+          - service: easee.action_command
+            data:
+              device_id: MyCarCharger
+              action_command: start
+      - conditions:
+          - condition: trigger
+            id: expensive
+        sequence:
+          - service: switch.turn_on
+            data: {}
+            target:
+              entity_id: switch.block_water_production
+          - service: switch.turn_off
+            data: {}
+            target:
+              entity_id:
+                - switch.living_room_charger
+          - service: easee.action_command
+            data:
+              device_id: MyCarCharger
+              action_command: pause
+      - conditions:
+          - condition: trigger
+            id: scheduled_hot_water
+        sequence:
+          - service: switch.turn_off
+            data: {}
+            target:
+              entity_id: switch.block_water_production
+    default: []
+  - service: easee.set_charging_cost
+    data:
+      charger_id: MyCarCharger
+      cost_per_kwh: "{{states('sensor.electricity_price') }}"
+      currency_id: SEK
+mode: single
+trace:
+  stored_traces: 10
