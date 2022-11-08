@@ -101,6 +101,7 @@ sensor:
             {%- else -%}
                 {{ state_attr('sensor.tomorrows_electricity_ceiling','hotwatertime') }}
             {%- endif %}
+# Compensate for buggy firmware
   - name: Refrigerator Electricity Consumption
     unique_id: refrigerator_el_consumption
     unit_of_measurement: kWh
@@ -112,6 +113,7 @@ sensor:
           {% if value < 0 %}{{ (value + const) | round(2) }}
           {% else %}{{ value }}
           {% endif %}
+# Compensate for buggy firmware
   - name: Freezer Electricity Consumption
     unique_id: freezer_el_consumption
     unit_of_measurement: kWh
