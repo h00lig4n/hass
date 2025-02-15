@@ -1,26 +1,66 @@
-  host: xxx.xxx.xxx.xxx
+  host: influxdb.$DOMAIN_NAME
   ssl: true
-  port: 8086
+  port: 443
   bucket: hass
-  organization: xxxxxxxxxx
+  organization: org
   token: !secret influxdb_token
   api_version: 2
   max_retries: 3
   include:
     entities:
+     # Heat Pump
       - sensor.rad_return
       - sensor.heat_carrier_return
       - sensor.heat_carrier_forward
+      - sensor.heat_pump_power_usage
       - sensor.brine_in
       - sensor.brine_out
       - sensor.outdoor
       - sensor.warm_water
       - sensor.hot_gas
       - sensor.additional_electric_heater
-      - sensor.energy_consumption
-      - sensor.living_room_media_power_electric_consumption_kwh
-      - sensor.dishwasher_power_electric_consumption_kwh
-      - sensor.media_room_computer_power_electric_consumption_kwh
+      - sensor.heat_pump_curve_left_target
+      - sensor.heat_pump_curve_right_target
+      - sensor.hall_north_motion_sensor_temperature
+      - sensor.$L_bedroom_window_air_temperature
+      - sensor.heat_pump_room_temperature_target
+      - sensor.$L_radiator_thermostat_air_temperature
+      - sensor.$L_room_climate_temperature
+      - sensor.$L_room_climate_humidity
+      - sensor.$L_room_thermostat_target
+      - sensor.$L_radiator_thermostat_air_temperature
+      - sensor.livingroom_climate_sensor_temperature
+      - sensor.livingroom_climate_sensor_humidity
+      - sensor.master_bedroom_window_air_temperature
+      - sensor.master_bedroom_climate_sensor_humidity
+      - sensor.master_bedroom_climate_sensor_temperature
+      - sensor.master_bedroom_thermostat_target
+      - sensor.master_bedroom_thermostat_temperature
+      - sensor.$S_thermostat_air_temperature
+      - sensor.$S_room_thermostat_target
+      - sensor.$S_room_climate_sensor_temperature
+      - sensor.$S_room_climate_sensor_humidity
+      - sensor.mediaroom_climate_sensor_humidity
+      - sensor.mediaroom_climate_sensor_temperature
+      - sensor.basement_hall_north_motion_sensor_temperature
+      - sensor.motorhome_climate_humidity
+      - sensor.motorhome_climate_temperature
+      - sensor.postmaster_electricity_price
+      - sensor.carcharger_energy_per_hour
+      - sensor.carcharger_current
+      - sensor.carcharger_power
+      - sensor.carcharger_cost_day
+      - sensor.carcharger_cost_month
+      - sensor.carcharger_cost_year
+      - sensor.carcharger_lifetime_energy
+      - sensor.elec_meter_elec_meter_total_energy_consumption
+      - sensor.living_room_media_switch_electric_consumption_kwh
+      - sensor.dishwasher_switch_electric_consumption_kwh
+      - sensor.media_room_computer_switch_electric_consumption_kwh
+      - sensor.chest_freezer_consumption
+      - sensor.freezer_consumption
+      - sensor.refrigerator_consumption
+      - sensor.media_room_computer_switch_electric_consumption_kwh
       - sensor.total_heatpump_consumption
       - sensor.total_operation_time
       - sensor.auxillary_consumption_heating      
@@ -32,47 +72,5 @@
       - sensor.heating_energy_supplied
       - sensor.hot_water_energy_supplied
       - sensor.total_energy_supplied
-      - sensor.bedroom1_room_humidity
-      - sensor.bedroom1_room_temperature
-      - sensor.living_room_temperature
-      - sensor.living_room_humidity
-      - sensor.bedroom3_room_temperature
-      - sensor.bedroom3_room_humidity
-      - sensor.master_bedroom_temperature
-      - sensor.master_bedroom_humidity
-      - sensor.bedroom2_room_temperature
-      - sensor.bedroom2_room_humidity
-      - sensor.bedroom2_radiator_thermostat_air_temperature
-      - sensor.media_room_humidity
-      - sensor.media_room_temperature
-      - sensor.hall_motion_sensor_temperature
-      - sensor.garage_door_inside_air_temperature
-      - sensor.el_meter_current_instant_l1
-      - sensor.el_meter_current_instant_l2
-      - sensor.el_meter_current_instant_l3
-      - sensor.el_meter_energy_active_negative
-      - sensor.el_meter_energy_active_positive
-      - sensor.el_meter_energy_reactive_negative
-      - sensor.el_meter_energy_reactive_positive
-      - sensor.el_meter_power_instant_active_negative
-      - sensor.el_meter_power_instant_active_negative_l1
-      - sensor.el_meter_power_instant_active_negative_l2
-      - sensor.el_meter_power_instant_active_negative_l3
-      - sensor.el_meter_power_instant_active_positive
-      - sensor.el_meter_power_instant_active_positive_l1
-      - sensor.el_meter_power_instant_active_positive_l2
-      - sensor.el_meter_power_instant_active_positive_l3
-      - sensor.el_meter_power_instant_reactive_negative
-      - sensor.el_meter_power_instant_reactive_negative_l1
-      - sensor.el_meter_power_instant_reactive_negative_l2
-      - sensor.el_meter_power_instant_reactive_negative_l3
-      - sensor.el_meter_power_instant_reactive_positive
-      - sensor.el_meter_power_instant_reactive_positive_l1
-      - sensor.el_meter_power_instant_reactive_positive_l2
-      - sensor.el_meter_power_instant_reactive_positive_l3
-      - sensor.el_meter_voltage_instant_l1
-      - sensor.el_meter_voltage_instant_l2
-      - sensor.el_meter_voltage_instant_l3
-      - sensor.nordpool_kwh_se3_sek_3_10_025
-      - sensor.electricity_price
-      - sensor.carcharger_lifetime_energy
+      - sensor.diesel_prices
+
