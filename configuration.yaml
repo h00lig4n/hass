@@ -1,75 +1,62 @@
-# Configure a default setup of Home Assistant (frontend, api, etc)
+# Loads default set of integrations. Do not remove.
 default_config:
 
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 10.42.0.0/16
+    - 10.42.1.0/24
+    - 192.168.0.200
+    - 192.168.0.20
+    - 192.168.0.21
+    - 192.168.0.22
+    - 192.168.0.23
+    - 192.168.0.24
+    - ::1
+# Load frontend themes from the themes folder
 frontend:
   themes: !include_dir_merge_named themes
-  
+
 # Text to speech
 tts:
   - platform: google_translate
 
-group: !include groups.yaml
-automation: !include automations.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
-device_tracker: !include device_tracker.yaml
-sensor: !include sensors.yaml
-binary_sensor: !include binary_sensors.yaml
-alarm_control_panel: !include alarm.yaml
-mqtt: !include_dir_merge_named mqtt_config/
-influxdb: !include influx.yaml
-utility_meter: !include el-meter.yaml
-template: !include templates.yaml
-rest: !include restful.yaml
+recorder:
+  db_max_retries: 3
+  commit_interval: 5
+  exclude:
+    entity_globs:
+      - light.*
 
-ffmpeg:
-
-aarlo:
-  username: mymail_address@mail.com
-  password: !secret aarlo_password
-  refresh_devices_every: 2
-  stream_timeout: 120
-  reconnect_every: 90
-  tfa_source: imap
-  tfa_type: email
-  tfa_host: imap.mail.com
-  tfa_username: 'mymail_address@mail.com'
-  tfa_password: !secret tfa_password
-  backend: sse
-
-camera:
-  - platform: aarlo
-  - platform: xiaomi_cloud_map_extractor
-    host: xxx.xxx.xxx.xxx
-    token: !secret xaomi_token
-    username: mymail_address@mail.com
-    password: !secret xaomi_password
-    draw: ['all']
-    attributes:
-      - calibration_points
-
-samsungtv:
-  - host: xxx.xxx.xxx.xxx
-    turn_on_action:
-      - service: switch.turn_on
-        data:
-          entity_id: switch.living_room_media_power
-      - service: wake_on_lan.send_magic_packet
-        data:
-          mac: 80:47:86:70:a2:26
-          
-media_player:
-  - platform: bluesound
+homeassistant:
+  media_dirs:
+    media: /media/media
+    recording: /media/recordings
+      
+sonos:
+  media_player:
+    advertise_addr: 192.168.0.200
     hosts:
-      - host: xxx.xxx.xxx.xxx
-        port: 11000
-        name: node
-  - platform: aarlo
-
-zha:
-  zigpy_config:
-    ota:
-      otau_directory: /config/zigpy_ota
-      ikea_provider: true
-      ledvance_provider: false
-      # otau_directory
+      - sonos.$DOMAIN_NAME
+ 
+ffmpeg: 
+ 
+camera:
+ - platform: xiaomi_cloud_map_extractor
+   host: 192.168.0.32
+   token: !secret xaomi_token
+   username: !secret gmail_username
+   password: !secret xaomi_password
+   draw: ['all']
+   attributes:
+     - calibration_points
+ 
+automation: !include automations.yaml
+influxdb: !include influx.yaml
+mqtt: !include mqtt.yaml
+rest: !include restful.yaml
+scene: !include scenes.yaml
+script: !include scripts.yaml
+template: !include templates.yaml
+utility_meter: !include el-meter.yaml
+sensor: !include sensors.yaml
