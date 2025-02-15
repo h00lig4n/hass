@@ -3,43 +3,51 @@
 # Max allowed current 23 Amp
 alias: Elec - Load Balancer
 description: Perform Load Balancing of Car Charger
-trigger:
-  - platform: state
-    entity_id:
-      - sensor.el_meter_current_instant_l1
+mode: single
+max_exceeded: silent
+triggers:
+  - entity_id:
+      - sensor.elec_meter_elec_meter_current_l1
     id: currentchange
-condition:
+    trigger: state
+  - entity_id:
+      - sensor.elec_meter_elec_meter_current_l2
+    id: currentchange
+    trigger: state
+  - entity_id:
+      - sensor.elec_meter_elec_meter_current_l3
+    id: currentchange
+    trigger: state
+conditions:
   - condition: state
     entity_id: sensor.carcharger_status
     state: charging
-action:
-  - service: easee.set_circuit_dynamic_limit
-    data:
-      charger_id: MyChargerId
-      # Allow fallback to lower offline limit if connection is lost. Prevent main fuse blowing.
+  - condition: numeric_state
+    entity_id: sensor.carcharger_dynamic_circuit_limit
+    attribute: state_dynamicCircuitCurrentP1
+    above: 6
+actions:
+  - data:
+      charger_id: $CHARGER_ID
       time_to_live: 1
-      # Allow fallback to lower offline limit if connection is lost. Prevent main fuse blowing.
-      currentP1: >-
-        {% set charge = 25 - (states('sensor.el_meter_current_instant_l1') |
-        round(0,'ceil'))
-                           + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP1') | round(0,'ceil')) %}
-        {% if charge > 23 %} {{   23   }} {%- else -%} {{ charge }} {%- endif %}
-      currentP2: >-
-        {% set charge = 25 - (states('sensor.el_meter_current_instant_l2') |
-        round(0,'ceil'))
-                           + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP2') | round(0,'ceil')) %}
-        {% if charge > 23 %} {{   23   }} {%- else -%} {{ charge }} {%- endif %}
-      currentP3: >-
-        {% set charge = 25 - (states('sensor.el_meter_current_instant_l3') |
-        round(0,'ceil'))
-                           + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP3') | round(0,'ceil')) %}
-        {% if charge > 23 %} {{   23   }} {%- else -%} {{ charge }} {%- endif %}
-    enabled: true
-# Just to stop Hass getting flooded by events.
+      current_p1: >-
+        {% set charge = 25 - (states('sensor.elec_meter_elec_meter_current_l1')
+        | int(25) | round(0,'ceil'))
+                           + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP1') | int(16) | round(0,'ceil')) %}
+        {% if charge > 16 %} {{   16   }} {%- else -%} {{ charge }} {%- endif %}
+      current_p2: >-
+        {% set charge = 25 - (states('sensor.elec_meter_elec_meter_current_l2')
+        | int(25) | round(0,'ceil'))
+                           + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP2') | int(16) | round(0,'ceil')) %}
+        {% if charge > 16 %} {{   16   }} {%- else -%} {{ charge }} {%- endif %}
+      current_p3: >-
+        {% set charge = 25 - (states('sensor.elec_meter_elec_meter_current_l3')
+        | int(25) | round(0,'ceil'))
+                           + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP3') | int(16) | round(0,'ceil')) %}
+        {% if charge > 16 %} {{   16   }} {%- else -%} {{ charge }} {%- endif %}
+    action: easee.set_circuit_dynamic_limit
   - delay:
       hours: 0
       minutes: 0
-      seconds: 2
+      seconds: 1
       milliseconds: 0
-mode: single
-max_exceeded: silent
