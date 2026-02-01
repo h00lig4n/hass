@@ -1,0 +1,25 @@
+# Folders
+.*
+backups
+custom_components
+deps
+image
+themes
+tts
+www
+
+# Files
+configuration/templates.yaml
+configuration/restful.yaml
+ui_lovelace_minimalist/dashboard/views/family.yaml
+alerts.yaml
+secrets.yaml
+notify.yaml
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.log
+*.log,faULT
+.ha_run.lock
+.HA_VERSION

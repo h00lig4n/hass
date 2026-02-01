@@ -1,0 +1,3 @@
+energy:
+  source: sensor.elec_meter_elec_meter_total_energy_consumption
+  cycle: monthly

@@ -1,0 +1,25 @@
+---
+button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
+
+title: "UI Lovelace Minimalist"
+theme: "minimalist-desktop"
+background: "var(--background-image)"
+# views: !include_dir_merge_list "views"
+views:
+  - !include views/home.yaml
+  - !include views/vehicles.yaml
+  - !include views/dishwasher.yaml
+  - !include views/vacuum.yaml
+  - !include views/family.yaml
+  - !include views/electricity.yaml
+  - !include views/heatpump.yaml
+  - !include views/masterbedroom.yaml
+  - !include views/security.yaml
+  - !include views/camera-hall.yaml
+  - !include views/camera-garden.yaml
+  - !include views/camera-decking.yaml
+  - !include views/camera-laundry.yaml
+  - !include views/weather.yaml
+  - !include views/printer.yaml
+  - !include views/general.yaml
+  - !include views/maintenance.yaml

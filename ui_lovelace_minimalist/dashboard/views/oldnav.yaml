@@ -1,0 +1,52 @@
+
+
+  #Navigation chips
+  - type: grid
+    columns: 5
+    square: false
+    cards:
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:vacuum"
+          ulm_card_navigate_path: "/ui-lovelace-minimalist/vacuum"
+          ulm_card_navigate_color: "var(--color-blue)"
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:dishwasher"
+          ulm_card_navigate_path: "/ui-lovelace-minimalist/dishwasher"
+          ulm_card_navigate_color: "var(--color-green)"
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:car"
+          ulm_card_navigate_path: "/ui-lovelace-minimalist/vehicles"
+          ulm_card_navigate_color: "var(--color-yellow)"
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:heat-pump"
+          ulm_card_navigate_path: "/ui-lovelace-minimalist/heatpump"
+          ulm_card_navigate_color: "var(--color-red)"
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:lightning-bolt"
+          ulm_card_navigate_path: "/ui-lovelace-minimalist/electricity"
+          ulm_card_navigate_color: "var(--color-white)"
+  # Navigation chips
+  - type: horizontal-stack
+    cards:
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:account-multiple"
+          ulm_card_navigate_path: /ui-lovelace-minimalist/masterbedroom
+          ulm_card_navigate_color: var(--color-pink)
+      - type: custom:button-card
+        template: custom_card_chip_navigate
+        variables:
+          ulm_card_navigate_icon: "mdi:account-multiple"
+          ulm_card_navigate_path: /ui-lovelace-minimalist/family
+          ulm_card_navigate_color: var(--color-pink)

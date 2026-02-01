@@ -1,0 +1,63 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 10.42.0.0/16
+    - 10.42.1.0/24
+    - 192.168.30.50
+    - 192.168.30.10
+    - 192.168.30.11
+    - 192.168.30.12
+    - 192.168.30.13
+    - 192.168.30.14
+    - ::1
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+recorder:
+  db_max_retries: 3
+  commit_interval: 5
+  exclude:
+    entity_globs:
+      - light.*
+
+homeassistant:
+  media_dirs:
+    media: /media/media
+    recording: /media/recordings
+      
+sonos:
+  media_player:
+    advertise_addr: 192.168.30.50
+    hosts:
+      - !secret sonos_host
+ 
+ffmpeg: 
+ 
+camera:
+ - platform: xiaomi_cloud_map_extractor
+   host: 192.168.20.100
+   token: !secret xaomi_token
+   country: de
+   username: !secret gmail_username
+   password: !secret xaomi_password
+   draw: ['all']
+   attributes:
+     - calibration_points
+ 
+automation: !include automations.yaml
+scene: !include scenes.yaml
+script: !include scripts.yaml
+influxdb: !include configuration/influx.yaml
+mqtt: !include configuration/mqtt.yaml
+rest: !include configuration/restful.yaml
+template: !include configuration/templates.yaml
+utility_meter: !include configuration/utility-meter.yaml
+sensor: !include configuration/sensors.yaml

@@ -1,0 +1,279 @@
+title: "Electricity"
+path: "electricity"
+subview: true
+cards:
+  # Navigation Stack
+  - type: horizontal-stack
+    cards:
+      - type: "custom:button-card"
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /ui-lovelace-minimalist/home
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.peak_effect_charge
+            state: "on" 
+        card:
+          type: "custom:button-card"
+          template: chip_mdi_icon_only
+          variables:
+            ulm_chip_mdi_icon_only_entity: binary_sensor.peak_effect_charge
+            ulm_chip_mdi_icon_only_icon: mdi:flash-triangle-outline
+            ulm_chip_mdi_icon_only_icon_color: "var(--google-red)"
+  - type: custom:button-card
+    template: card_navigate
+    variables:
+      ulm_card_navigate_path: /energy
+      ulm_card_navigate_title: Energy Dashboard
+      ulm_card_navigate_icon: mdi:lightning-bolt
+      ulm_card_navigate_color: var(--color-yellow)
+
+  - type: "custom:button-card"
+    template: card_generic
+    entity: sensor.postmaster_electricity_price
+    variables:
+      ulm_card_generic_name: "Electricity Price"
+      ulm_card_generic_color: "blue"
+
+  # Car Charge Price Limit Control
+  - type: "custom:button-card"
+    template: card_input_number
+    entity: input_number.electricity_ceiling
+    variables:
+      ulm_card_input_number_name: "Car Charge Price Limit"
+
+  - type: custom:apexcharts-card
+    experimental:
+      hidden_by_default: true
+    graph_span: 23h
+    span:
+      start: day
+    now:
+      show: true
+      color: white
+      label: Now
+    header:
+      show: true
+      floating: false
+      standard_format: false
+      disable_actions: true
+      title: Daily Electricity Price (SEK/kWh)
+    series:
+      - name: Yesterday
+        entity: sensor.postmaster_electricity_price
+        offset: "-1d"
+        type: line
+        color: orange
+        opacity: 1
+        float_precision: 3
+        unit: SEK/kWh
+        group_by:
+          duration: 25min
+          func: avg
+        show:
+          legend_value: false
+          hidden_by_default: true
+      - name: Today
+        entity: sensor.tibber_prices
+        float_precision: 3
+        color: cornflowerblue
+        show:
+          legend_value: false
+        type: area
+        opacity: 0.5
+        data_generator: |
+          return entity.attributes.today.map((record, index) => {
+            return [record.startsAt, record.total];
+          });
+      - name: Tomorrow
+        entity: sensor.tibber_prices
+        color: forestgreen
+        float_precision: 3
+        show:
+          legend_value: false
+        type: line
+        unit: SEK/kWh
+        opacity: 1
+        data_generator: |
+          if (entity.attributes.tomorrow != null) {
+              return entity.attributes.tomorrow.map((record, index) => {
+              var dt = new Date(record.startsAt);
+              dt.setDate(dt.getDate()-1);
+              return [dt , record.total]; 
+            });
+          }
+          else
+          {
+            return entity.attributes.today.map((record, index) => {
+            return [record.startsAt, 0];
+            });
+          }
+      - name: Limit (Today)
+        entity: input_number.electricity_ceiling
+        unit: SEK/kWh
+        color: red
+        group_by:
+          duration: 25min
+          func: last
+        float_precision: 3
+        type: line
+        stroke_width: 2
+        stroke_dash: 3
+        opacity: 1
+        show:
+          legend_value: false
+
+  - type: energy-devices-graph
+  - type: energy-usage-graph
+  - type: gauge
+    entity: sensor.elec_meter_elec_meter_power
+    name: Total Power Draw
+    unit: kW
+    max: 25
+    segments:
+      - from: 0
+        color: green
+      - from: 10
+        color: yellow
+      - from: 15
+        color: orange
+      - from: 20
+        color: red
+    min: 0
+
+  - type: grid
+    square: true
+    columns: 3
+    cards:
+      - type: gauge
+        entity: sensor.heat_pump_power_usage
+        name: Heat Pump
+        min: 0
+        unit: W
+        max: 9000
+        segments:
+          - from: 0
+            color: green
+          - from: 2000
+            color: yellow
+          - from: 4000
+            color: orange
+          - from: 6000
+            color: red
+      - type: gauge
+        entity: sensor.carcharger_power
+        name: Car Charger
+        unit: KW
+        min: 0
+        max: 20
+        segments:
+          - from: 0
+            color: green
+          - from: 1
+            color: yellow
+          - from: 11
+            color: orange
+          - from: 15
+            color: red
+      - type: gauge
+        entity: sensor.dishwasher_switch_power
+        name: Dishwasher
+        min: 0
+        severity:
+          green: 0
+          yellow: 500
+          red: 900
+        unit: W
+        max: 2500
+      - type: gauge
+        entity: sensor.living_room_media_switch_power
+        name: Living Room AV
+        min: 0
+        max: 1000
+        severity:
+          green: 0
+          yellow: 500
+          red: 900
+        unit: W
+      - type: gauge
+        name: Media Room PCs
+        min: 0
+        max: 1000
+        severity:
+          green: 0
+          yellow: 200
+          red: 800
+        entity: sensor.media_room_computer_switch_power
+        unit: W
+      - type: gauge
+        entity: sensor.leon_bedroom_computer_switch_power_2
+        name: Leon's Room PCs
+        min: 0
+        max: 1000
+        severity:
+          green: 0
+          yellow: 200
+          red: 800
+      - type: gauge
+        entity: sensor.refrigerator_switch_electric_consumption_w
+        unit: W
+        name: Refrigerator
+        min: 0
+        max: 50
+        severity:
+          green: 0
+          yellow: 20
+          red: 30
+      - type: gauge
+        entity: sensor.freezer_switch_electric_consumption_w
+        name: Freezer
+        unit: W
+        min: 0
+        max: 170
+        severity:
+          green: 0
+          yellow: 20
+          red: 35
+      - type: gauge
+        entity: sensor.server_switch_electric_consumption_w
+        min: 1
+        max: 100
+        severity:
+          green: 0
+          yellow: 71.5
+          red: 80
+        name: Server Rack
+
+  - type: grid
+    cards:
+      - type: gauge
+        entity: sensor.elec_meter_elec_meter_current_l1
+        min: 0
+        max: 25
+        severity:
+          green: 0
+          yellow: 10
+          red: 20
+        name: Current L1
+        unit: A
+      - type: gauge
+        entity: sensor.elec_meter_elec_meter_current_l2
+        min: 0
+        max: 25
+        severity:
+          green: 0
+          yellow: 10
+          red: 20
+        name: Current L2
+        unit: A
+      - type: gauge
+        entity: sensor.elec_meter_elec_meter_current_l3
+        max: 25
+        min: 0
+        severity:
+          green: 0
+          yellow: 10
+          red: 20
+        name: Current L3
+        unit: A

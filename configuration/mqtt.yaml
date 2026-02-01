@@ -1,0 +1,793 @@
+binary_sensor:   
+  - name: "Compressor"
+    unique_id: ivt_compressor
+    state_topic: "+/HP/1A01"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Brine pump"
+    unique_id: ivt_brine_pump
+    state_topic: "+/HP/1A04"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heat carrier pump"
+    unique_id: ivt_heatcarrier_pump
+    state_topic: "+/HP/1A05"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Radiator pump"
+    unique_id: ivt_radiator_pump
+    state_topic: "+/HP/1A06"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Switch valve"
+    unique_id: ivt_switch_valve
+    state_topic: "+/HP/1A07"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heating cable"
+    unique_id: ivt_heating_cable
+    state_topic: "+/HP/1A0C"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Alarm"
+    unique_id: ivt_alarm
+    state_topic: "+/HP/1A20"
+    device_class: problem
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Electric heater"
+    unique_id: ivt_electric_heater_switch
+    state_topic: "+/HP/2215"
+    device_class: running
+    payload_on: "1.00"
+    payload_off: "0.00"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+climate:
+  - name: "Room Temp Setpoint"
+    modes:
+    current_temperature_topic: "+/HP/0203"
+    temperature_state_topic: "+/HP/0203"
+    temperature_command_topic: "8cce4efbe9d8/HP/SET/0203"
+    min_temp: 13
+    max_temp: 29
+    temp_step: .5
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heat Set 1, Curve L"
+    modes:
+    current_temperature_topic: "+/HP/0205"
+    temperature_state_topic: "+/HP/0205"
+    temperature_command_topic: "8cce4efbe9d8/HP/SET/0205"
+    min_temp: -100
+    max_temp: 100
+    temp_step: .1
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heat Set 2, Curve R"
+    modes:
+    current_temperature_topic: "+/HP/0206"
+    temperature_state_topic: "+/HP/0206"
+    temperature_command_topic: "8cce4efbe9d8/HP/SET/0206"
+    min_temp: 15
+    max_temp: 30
+    temp_step: .1
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+number:
+  - unique_id: ivt_warm_water_program
+    command_topic: "8cce4efbe9d8/SET/2213"
+    state_topic: "+/HP/2213"
+    min: 1
+    max: 2
+    step: 1
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+switch:
+  - unique_id: ivt_block_water_production_ext2
+    name: "Block Water Production"
+    state_topic: "+/HP/2234"
+    command_topic: "8cce4efbe9d8/HP/SET/2234"
+    payload_on: "1.00"
+    payload_off: "0.00"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - unique_id: ivt_produce_extra_hotwater
+    name: "Produce Extra Hot Water"
+    state_topic: "+/HP/1231"
+    command_topic: "8cce4efbe9d8/HP/SET/1231"
+    payload_on: "1"
+    payload_off: "0"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+sensor:
+  - name: "Heat Pump Alarm Code"
+    unique_id: ivt_alarm_code
+    state_topic: "+/HP/2A91"
+    icon: mdi:exclamation-thick
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Limit Compressor"
+    unique_id: ivt_limit_compressor
+    state_topic: "+/HP/2227"
+    unit_of_measurement: "kW"
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Limit Auxiliary heat"
+    unique_id: ivt_limit_auxiliary_heat
+    state_topic: "+/HP/2228"
+    unit_of_measurement: "kW"
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Limit Hot Water"
+    unique_id: ivt_limit_hot_water
+    state_topic: "+/HP/2229"
+    unit_of_measurement: "kW"
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"  
+  - name: "Rad Forward"
+    unique_id: ivt_radiator_forward
+    state_topic: "+/HP/0002"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heat Carrier Return"
+    unique_id: ivt_heat_carrier_return
+    state_topic: "+/HP/0003"
+    unit_of_measurement: "°C"    
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heat Carrier Forward"
+    unique_id: ivt_heat_carrier_forward
+    state_topic: "+/HP/0004" 
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Brine In"
+    unique_id: ivt_brine_in
+    state_topic: "+/HP/0005"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Brine Out"
+    unique_id: ivt_brine_out
+    state_topic: "+/HP/0006"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Outdoor"
+    unique_id: ivt_outdoor_temp
+    state_topic: "+/HP/0007"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Warm water"
+    unique_id: ivt_warm_water
+    state_topic: "+/HP/0009"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Warm water Mid"
+    unique_id: ivt_warm_water_mid
+    state_topic: "+/HP/000A"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"  
+  - name: "Hot gas"
+    unique_id: ivt_hot_gas
+    state_topic: "+/HP/000B"   
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Suction gas"
+    unique_id: ivt_suction_gas
+    state_topic: "+/HP/000C"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Air intake"
+    unique_id: ivt_air_intake
+    state_topic: "+/HP/000E"
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Circulation Pump Speed"
+    unique_id: ivt_circulation_pump_speed
+    state_topic: "+/HP/3109"
+    unit_of_measurement: "%"
+    icon: mdi:fan
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Brine Pump Speed"
+    unique_id: ivt_brine_pump_speed
+    state_topic: "+/HP/3110"
+    unit_of_measurement: "%"
+    icon: mdi:fan
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Compressor Speed"
+    unique_id: ivt_compressor_speed_1
+    state_topic: "+/HP/9108"  
+    unit_of_measurement: "kW"
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Compressor Speed"
+    unique_id: ivt_compressor_speed_2
+    state_topic: "+/HP/3108"  
+    unit_of_measurement: "%"
+    icon: mdi:fan
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heating Setpoint 2"
+    unique_id: ivt_heating_setpoint_2
+    state_topic: "+/HP/3120"  
+    unit_of_measurement: "%"
+    icon: mdi:fan
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"  
+  - name: "Heating Setpoint"
+    unique_id: ivt_heating_setpoint
+    state_topic: "+/HP/0107"   
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Warm Water Setpoint"
+    unique_id: ivt_warmwater_setpoint
+    state_topic: "+/HP/0111"
+    unit_of_measurement: "°C"
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+    icon: mdi:thermometer
+  - name: "Additional electric heater"
+    unique_id: ivt_additional_el_heater
+    state_topic: "+/HP/3104"   
+    unit_of_measurement: "%"
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Total Operation Time"
+    unique_id: ivt_total_op_time
+    state_topic: "+/HP/6C50"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "h"
+    icon: mdi:clock
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Compressor Runtime"
+    unique_id: ivt_compressor_runtime
+    state_topic: "+/HP/6C60"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "h"
+    icon: mdi:clock
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Total Energy Supplied"
+    unique_id: ivt_total_energy_supplied
+    state_topic: "+/HP/5C51"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 20 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy    
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heating Energy Supplied"
+    unique_id: ivt_heating_energy_supplied
+    state_topic: "+/HP/5C52"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Hot Water Energy Supplied"
+    unique_id: ivt_hotwater_energy_supplied
+    state_topic: "+/HP/5C53"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Compressor Consumption Total"
+    unique_id: ivt_compressor_consumption_total
+    state_topic: "+/HP/5C54"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 20 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Compressor Consumption Heating"
+    unique_id: ivt_compressor_consumption_heating
+    state_topic: "+/HP/5C55"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Compressor Consumption Hot Water"
+    unique_id: ivt_compressor_consumption_hotwater
+    state_topic: "+/HP/5C56"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    unit_of_measurement: "kWh"
+    device_class: energy
+    icon: mdi:pump
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Auxillary Consumption Total"
+    unique_id: ivt_aux_consumption_total
+    state_topic: "+/HP/5C57"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 20 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Auxillary Consumption Heating"
+    unique_id: ivt_aux_consumption_heating
+    state_topic: "+/HP/5C58"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy    
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Auxillary Consumption Hot Water"
+    unique_id: ivt_aux_consumption_hotwater
+    state_topic: "+/HP/5C59"
+    state_class: total_increasing
+    value_template: |-
+        {% if value | int(0) > 0 and value | int(0) >= states(entity_id) | int(0) and value | int(0) < states(entity_id) | int(0) + 10 %}
+            {{ value }}
+        {% elif value | int(0) > 0 and states(entity_id) | int(0) == 0 %}
+            {{ value }}
+        {% else %}
+            {{ states(entity_id) }}
+        {% endif %}
+    device_class: energy
+    unit_of_measurement: "kWh"
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+  - name: "Heat Pump Power Usage"
+    unique_id: ivt_power_usage_now
+    state_topic: "8cce4efbe9d8/HP/STATUS/POWERSUM"
+    device_class: power
+    unit_of_measurement: "W"
+    icon: mdi:flash
+    device:
+      name: IVT GEO 500C
+      configuration_url: !secret heatpump_url
+      identifiers:
+        - "GEO500C"
+#Water Meter
+
+#Electricy Meter
+  - name: "Elec Meter Total Energy Consumption"
+    unique_id: elec_meter_total_energy_consumption
+    state_topic: "EMR_AB4EFC/KAM5/Energy/Active/Positive/value"
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    icon: mdi:transmission-tower-import
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Current L1"
+    unique_id: elec_meter_current_l1
+    state_topic: "EMR_AB4EFC/KAM5/Current/Instant/L1/value"
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    icon: mdi:current-ac
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Current L2"
+    unique_id: elec_meter_current_l2
+    state_topic: "EMR_AB4EFC/KAM5/Current/Instant/L2/value"
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    icon: mdi:current-ac
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Current L3"
+    unique_id: elec_meter_current_l3
+    state_topic: "EMR_AB4EFC/KAM5/Current/Instant/L3/value"
+    unit_of_measurement: "A"
+    device_class: current
+    state_class: measurement
+    icon: mdi:current-ac
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Voltage L1"
+    unique_id: elec_meter_voltage_l1
+    state_topic: "EMR_AB4EFC/KAM5/Voltage/Instant/L1/value"
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    icon: mdi:lightning-bolt
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Voltage L2"
+    unique_id: elec_meter_voltage_l2
+    state_topic: "EMR_AB4EFC/KAM5/Voltage/Instant/L2/value"
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    icon: mdi:lightning-bolt
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Voltage L3"
+    unique_id: elec_meter_voltage_l3
+    state_topic: "EMR_AB4EFC/KAM5/Voltage/Instant/L3/value"
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    icon: mdi:lightning-bolt
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Power"
+    unique_id: elec_meter_power
+    state_topic: "EMR_AB4EFC/KAM5/Power/Instant/Active/Positive/value"
+    unit_of_measurement: "kW"
+    device_class: power
+    state_class: measurement
+    icon: mdi:lightning-bolt
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Power L1"
+    unique_id: elec_meter_power_l1
+    state_topic: "EMR_AB4EFC/KAM5/Power/Instant/Active/Positive/L1/value"
+    unit_of_measurement: "kW"
+    device_class: power
+    icon: mdi:lightning-bolt
+    state_class: measurement
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Power L2"
+    unique_id: elec_meter_power_l2
+    state_topic: "EMR_AB4EFC/KAM5/Power/Instant/Active/Positive/L2/value"
+    unit_of_measurement: "kW"
+    device_class: power
+    icon: mdi:lightning-bolt
+    state_class: measurement
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  - name: "Elec Meter Power L3"
+    unique_id: elec_meter_power_l3
+    state_topic: "EMR_AB4EFC/KAM5/Power/Instant/Active/Positive/L3/value"
+    unit_of_measurement: "kW"
+    device_class: power
+    state_class: measurement
+    icon: mdi:lightning-bolt
+    device:
+        name: Elec Meter
+        configuration_url: !secret elmeter_url
+        identifiers:
+            - "EMR_AB4EFC-KAM5"
+  #CPU Temperatures K3S Cluster
+  - unique_id: cpu_temp_k3s1
+    name: "cpu_temp_k3s1"
+    state_topic: "k3s1/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s1/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s2
+    name: "cpu_temp_k3s2"
+    state_topic: "k3s2/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s2/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s3
+    name: "cpu_temp_k3s3"
+    state_topic: "k3s3/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s3/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s4
+    name: "cpu_temp_k3s4"
+    state_topic: "k3s4/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s4/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"
+  - unique_id: cpu_temp_k3s5
+    name: "cpu_temp_k3s5"
+    state_topic: "k3s5/cpu_temp"
+    state_class: measurement
+    unit_of_measurement: '°C'
+    availability_topic: "k3s5/cpu_temp/available"
+    payload_available: "online"
+    payload_not_available: "offline"

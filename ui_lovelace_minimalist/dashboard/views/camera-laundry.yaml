@@ -1,0 +1,18 @@
+title: "Laundry Camera"
+path: "camera-laundry"
+subview: true
+cards:
+  - type: "custom:button-card"
+    template: card_light
+    entity: switch.laundry_camera_privacy
+    variables:
+      ulm_card_light_name: "Privacy Mode"
+      ulm_card_light_show_state: true
+  - type: "custom:button-card"
+    entity: camera.laundry_camera_hd_stream
+    template: "custom_card_camera"
+    show_icon: true #True if you set ulm_custom_card_camera_title: true
+    variables:
+      ulm_custom_card_camera_title: true
+      ulm_custom_card_camera_name: "Laundry Camera"
+      ulm_custom_card_camera_aspect_ratio: "16:9"

@@ -1,0 +1,425 @@
+title: "Home"
+path: "home"
+cards:
+  # Top Information Chips
+  - type: horizontal-stack
+    cards:
+      - type: 'custom:button-card'
+        template: chip_temperature
+        variables:
+          ulm_chip_temperature_inside: sensor.livingroom_climate_sensor_temperature
+          ulm_chip_temperature_outside: sensor.outdoor
+          ulm_chip_temperature_weather: weather.smhi_home
+        tap_action:
+          action: navigate
+          navigation_path: "/ui-lovelace-minimalist/weather"
+      #Car home, locked, cable connected
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.wvwzzzed4se023218_doors_locked
+            state: "off"
+          - condition: state
+            entity: binary_sensor.wvwzzzed4se023218_charging_cable_connected
+            state: "on"           
+        card:
+          type: 'custom:button-card'
+          template: chip_icon_state
+          variables:
+            ulm_chip_icon_state_icon: '🚗'
+            ulm_chip_icon_state_entity: sensor.wvwzzzed4se023218_battery_level
+          tap_action:
+            action: navigate
+            navigation_path: "/ui-lovelace-minimalist/vehicles"
+      #Car home, unlocked
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.wvwzzzed4se023218_doors_locked
+            state: "off"
+          - condition: state
+            entity: binary_sensor.wvwzzzed4se023218_charging_cable_connected
+            state: "off"
+        card:
+          type: 'custom:button-card'
+          template: chip_icon_state
+          variables:
+            ulm_chip_icon_state_icon: '🚗'
+            ulm_chip_icon_state_entity: binary_sensor.wvwzzzed4se023218_doors_locked
+          tap_action:
+            action: navigate
+            navigation_path: "/ui-lovelace-minimalist/vehicles" 
+      #Car home, locked, cable disconnected
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.wvwzzzed4se023218_doors_locked
+            state: "off"
+          - condition: state
+            entity: device_tracker.wvwzzzed4se023218_position
+            state: "home"
+          - condition: state
+            entity: binary_sensor.wvwzzzed4se023218_charging_cable_connected
+            state: "off"   
+        card:
+          type: 'custom:button-card'
+          template: chip_icon_state
+          variables:
+            ulm_chip_icon_state_icon: '🚗'
+            ulm_chip_icon_state_entity: binary_sensor.wvwzzzed4se023218_charging_cable_connected
+          tap_action:
+            action: navigate
+            navigation_path: "/ui-lovelace-minimalist/vehicles"
+      # Water Temperature 
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.water_is_cold
+            state: "off"
+        card:
+          type: 'custom:button-card'
+          template: chip_mdi_icon_only
+          variables:
+            ulm_chip_mdi_icon_only_entity: binary_sensor.water_is_cold
+            ulm_chip_mdi_icon_only_icon: mdi:water-thermometer
+            ulm_chip_mdi_icon_only_icon_color: "var(--google-red)"
+          tap_action:
+            action: navigate
+            navigation_path: "/ui-lovelace-minimalist/heatpump"
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.water_is_cold
+            state: "on"
+        card:
+          type: 'custom:button-card'
+          template: chip_mdi_icon_only
+          variables:
+            ulm_chip_mdi_icon_only_entity: binary_sensor.water_is_cold
+            ulm_chip_mdi_icon_only_icon: mdi:water-thermometer
+            ulm_chip_mdi_icon_only_icon_color: "var(--google-blue)"
+          tap_action:
+            action: navigate
+            navigation_path: "/ui-lovelace-minimalist/heatpump"
+      # Heat Pump Alarm
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.alarm
+            state: "on" 
+        card:
+          type: "custom:button-card"
+          template: chip_mdi_icon_only
+          variables:
+            ulm_chip_mdi_icon_only_entity: binary_sensor.alarm
+            ulm_chip_mdi_icon_only_icon: mdi:alert 
+            ulm_chip_mdi_icon_only_icon_color: "var(--google-yellow)"
+          tap_action:
+            action: navigate
+            navigation_path: "/ui-lovelace-minimalist/heatpump"
+      # Non Working Day     
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.non_working_day
+            state: "on" 
+        card:
+          type: "custom:button-card"
+          template: chip_mdi_icon_only
+          variables:
+            ulm_chip_mdi_icon_only_entity: binary_sensor.non_working_day
+            ulm_chip_mdi_icon_only_icon: mdi:calendar-weekend
+            ulm_chip_mdi_icon_only_icon_color: "var(--google-green)"
+
+  # Heat Pump Alarm
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.alarm
+        state: "on"
+    card:
+      type: "custom:button-card"
+      template: 
+        - card_generic_swap
+        - ulm_actions_card_overlay
+      entity: binary_sensor.alarm
+      variables:
+        ulm_card_generic_swap_name: "Heat Pump Alarm"
+        ulm_card_generic_swap_icon: "mdi:alert"
+        ulm_card_generic_swap_color: "yellow"
+        ulm_card_tap_action: "navigate"
+        ulm_card_tap_navigate_path: "/ui-lovelace-minimalist/heatpump"
+
+  # Car Charger Online
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.carcharger_online
+        state: "off"
+    card:
+      type: "custom:button-card"
+      template: 
+        - card_generic_swap
+        - ulm_actions_card_overlay
+      entity: binary_sensor.carcharger_online
+      variables:
+        ulm_card_generic_swap_name: "Car Charger Status"
+        ulm_card_generic_swap_icon: "mdi:alert"
+        ulm_card_generic_swap_color: "yellow"
+        ulm_card_tap_action: "navigate"
+        ulm_card_tap_navigate_path: "/ui-lovelace-minimalist/vehicles"
+
+  # Navigation Grid
+  - type: grid
+    columns: 6
+    square: false
+    cards:
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:vacuum
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-blue)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/vacuum"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:car
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-yellow)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/vehicles"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:heat-pump
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-red)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/heatpump"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:account-multiple
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-green)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/family"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:bed-double
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/masterbedroom"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:bed-single
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-blue)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/masterbedroom"  
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:dishwasher
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-green)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/dishwasher"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:lightning-bolt
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-white)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/electricity"
+    - type: "custom:button-card"
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.livingroom_climate_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:thermometer
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-blue)"
+      tap_action:
+        action: url
+        url_path: "https://grafana.home.thomason.nu/public-dashboards/700cfb8a5dd848f6941d26ef40b56acd?from=now-24h&to=now"
+    - type: 'custom:button-card'
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.basement_hall_north_motion_sensor_temperature
+        ulm_chip_mdi_icon_only_icon: mdi:shield-half-full
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-red)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/security"
+    - type: "custom:button-card"
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.lexmark_mc2425adw
+        ulm_chip_mdi_icon_only_icon: mdi:printer
+        ulm_chip_mdi_icon_only_icon_color: "var(--google-green)"
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/printer"   
+    - type: "custom:button-card"
+      template: chip_mdi_icon_only
+      variables:
+        ulm_chip_mdi_icon_only_entity: sensor.lexmark_mc2425adw
+        ulm_chip_mdi_icon_only_icon: mdi:cog 
+      tap_action:
+        action: navigate
+        navigation_path: "/ui-lovelace-minimalist/general"
+
+
+  #Main Floor 
+  - type: custom:fold-entity-row
+    head:
+      type: "custom:button-card"
+      template: card_title
+      name: Main Floor
+    entities:
+      - type: "custom:button-card"
+        template: card_light
+        entity: switch.living_room_media_switch
+        variables:
+          ulm_card_light_name: "TV Power"
+          ulm_card_light_icon: mdi:television
+      - type: "custom:button-card"
+        template: "card_scenes_welcome"
+        variables:
+          entity_1:
+            entity_id: scene.living_room_lamps_3_livingroom_tv
+            icon: "mdi:television"
+            name: "TV Lighting"
+            color: "blue"
+          entity_2:
+            entity_id: scene.living_room_lamps_1_livingroom_relax
+            icon: "mdi:glass-wine"
+            name: "Relax Lighting"
+            color: "red"
+          entity_3:
+            entity_id: scene.living_room_lamps_3_livingroom_medium
+            icon: "mdi:ceiling-light-multiple"
+            name: "Medium"
+            color: "yellow" 
+
+      - type: custom:fold-entity-row
+        head:
+          type: custom:button-card
+          template: card_light
+          entity: light.main_floor_lights
+          variables:
+            ulm_card_light_enable_slider: true
+            ulm_card_light_name: "All Lights"
+        entities:
+          - type: custom:fold-entity-row
+            head:
+              type: custom:button-card
+              template: card_light
+              entity: light.living_room_lamps
+              variables:
+                ulm_card_light_enable_slider: true
+                ulm_card_light_name: "Living Room Lights"
+            entities:
+              - type: custom:button-card
+                template: card_light
+                entity: light.living_room_window_lamps
+                variables:
+                  ulm_card_light_enable_slider: true
+                  ulm_card_light_name: "Window Lights"
+              - type: custom:button-card
+                template: card_light
+                entity: light.livingroom_zebra_lamp
+                variables:
+                  ulm_card_light_enable_slider: true
+                  ulm_card_light_name: "Zebra Lamp"
+              - type: custom:button-card
+                template: card_light
+                entity: light.livingroom_parrot_lamp
+                variables:
+                  ulm_card_light_enable_slider: true
+                  ulm_card_light_name: "Parrot Lamp"
+          - type: custom:fold-entity-row
+            head:
+              type: custom:button-card
+              template: card_light
+              entity: light.hall_lamps
+              variables:
+                ulm_card_light_enable_slider: true
+                ulm_card_light_name: "Hall Lights"
+            entities:
+              - type: custom:button-card
+                template: card_light
+                entity: light.hall_south_lamp
+                variables:
+                  ulm_card_light_enable_slider: true
+                  ulm_card_light_name: "South Lamp"
+              - type: custom:button-card
+                template: card_light
+                entity: light.hall_north_lamp
+                variables:
+                  ulm_card_light_enable_slider: true
+                  ulm_card_light_name: "North Lamp"      
+  #Basement 
+  - type: custom:fold-entity-row
+    head:
+      type: "custom:button-card"
+      template: card_title
+      name: Basement
+    entities:
+    - type: "custom:button-card"
+      template: card_light
+      entity: switch.media_room_heater_switch
+      variables:
+        ulm_card_light_name: "Heater"
+        ulm_card_light_icon: mdi:radiator
+    - type: "custom:button-card"
+      template: card_light
+      entity: switch.media_room_computer_switch
+      variables:
+        ulm_card_light_name: "Computer Power"
+        ulm_card_light_icon: mdi:desktop-classic
+    - type: "custom:button-card"
+      template: card_light
+      entity: switch.media_room_audio_video
+      variables:
+        ulm_card_light_name: "TV and Audio Power"
+        ulm_card_light_icon: mdi:television
+    - type: "custom:button-card"
+      template: card_light
+      entity: switch.media_room_subwoofer_switch
+      variables:
+        ulm_card_light_name: "Subwoofer Power"
+        ulm_card_light_icon: mdi:music-clef-bass
+    - type: custom:fold-entity-row
+      head:
+        type: custom:button-card
+        template: card_light
+        entity: light.mediaroom_lamps
+        variables:
+          ulm_card_light_enable_slider: true
+          ulm_card_light_name: "TV Room Lights"
+      entities:
+        - type: custom:button-card
+          template: card_light
+          entity: light.mediaroom_bulb_1
+          variables:
+            ulm_card_light_enable_slider: true
+            ulm_card_light_name: "TV Room Ceiling"
+        - type: custom:button-card
+          template: card_light
+          entity: light.mediaroom_bookshelf_lamp
+          variables:
+            ulm_card_light_enable_slider: true
+            ulm_card_light_name: "TV Room Bookshelf Lamp"

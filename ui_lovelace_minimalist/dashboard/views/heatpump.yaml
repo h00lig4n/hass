@@ -1,0 +1,274 @@
+title: "Heatpump"
+path: "heatpump"
+subview: true
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: "custom:button-card"
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /ui-lovelace-minimalist/home
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.water_is_cold
+            state: "off"
+        card:
+          type: 'custom:button-card'
+          template: chip_mdi_icon_state
+          variables:
+            ulm_chip_mdi_icon_state_entity: sensor.warm_water
+            ulm_chip_mdi_icon_state_icon: mdi:water-thermometer
+            ulm_chip_mdi_icon_state_icon_color: "var(--google-red)"
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: binary_sensor.water_is_cold
+            state: "on"
+        card:
+          type: 'custom:button-card'
+          template: chip_mdi_icon_state
+          variables:
+            ulm_chip_mdi_icon_state_entity: sensor.warm_water
+            ulm_chip_icon_stulm_chip_mdi_icon_state_iconate_icon: mdi:water-thermometer
+            ulm_chip_mdi_icon_state_icon_color: "var(--google-blue)"
+
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.alarm
+        state: "on"
+    card:
+      type: 'custom:button-card'
+      template: card_binary_sensor_alert
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_icon_alert_invert_state: false
+        ulm_card_binary_sensor_alert_icon: "mdi:heat-pump"
+        ulm_card_binary_sensor_alert_name: "Heatpump Alarm"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+      entity: binary_sensor.alarm
+
+  - type: picture-elements
+    elements:
+      - entity: binary_sensor.compressor
+        style:
+          left: 36%
+          top: 60%
+        type: state-icon
+      - entity: binary_sensor.switch_valve
+        style:
+          left: 77%
+          top: 36%
+        type: state-icon
+      - entity: sensor.rad_forward
+        style:
+          left: 65%
+          top: 22%
+          color: white
+        type: state-label
+      - entity: sensor.heat_carrier_forward
+        style:
+          left: 71%
+          top: 67%
+        type: state-label
+      - entity: sensor.heat_carrier_return
+        style:
+          left: 71%
+          top: 93%
+        type: state-label
+      - entity: sensor.brine_in
+        style:
+          left: 15%
+          top: 59%
+        type: state-label
+      - entity: sensor.brine_out
+        style:
+          left: 15%
+          top: 93%
+        type: state-label
+      - entity: sensor.warm_water
+        type: state-label
+        title: Hot Water
+        style:
+          left: 88%
+          top: 54%
+          color: white
+      - entity: sensor.hot_gas
+        style:
+          left: 47%
+          top: 59%
+        type: state-label
+      - entity: sensor.outdoor
+        style:
+          left: 8%
+          top: 20%
+        type: state-label
+      - entity: sensor.hall_north_motion_sensor_temperature
+        style:
+          left: 20%
+          top: 40%
+        type: state-label
+      - entity: sensor.additional_electric_heater
+        style:
+          left: 59%
+          top: 43%
+        type: state-label
+    image: /local/pictures/BV_3_HA_Dark2.png
+
+  - type: custom:apexcharts-card
+    graph_span: 24h
+    span:
+      start: day
+    now:
+      show: true
+    header:
+      show: true
+      floating: false
+      standard_format: false
+      disable_actions: true
+      show_states: false
+      title: Todays Heat Pump Consumption kWh
+    series:
+      - entity: sensor.compressor_consumption_hot_water
+        name: Compressor - Hot Water
+        color: blue
+        group_by:
+          func: diff
+          start_with_last: true
+        show:
+          legend_value: false
+        unit: kWh
+      - entity: sensor.auxillary_consumption_hot_water
+        name: Auxillary - Hot Water
+        group_by:
+          func: diff
+          start_with_last: true
+        show:
+          legend_value: false
+        color: orange
+      - entity: sensor.compressor_consumption_heating
+        name: Compressor - Heating
+        group_by:
+          func: diff
+          start_with_last: true
+        show:
+          legend_value: false
+        color: green
+      - entity: sensor.auxillary_consumption_heating
+        name: Auxillary - Heating
+        group_by:
+          func: diff
+          start_with_last: true
+        show:
+          legend_value: false
+        color: red
+
+  - type: custom:mini-graph-card
+    icon: hass:temperature
+    name: Heat Carrier Temperature Difference
+    fill: true
+    hour24: true
+    hours_to_show: 168
+    points_per_hour: 0.1
+    labels_secondary: true
+    upper_bound: 15
+    lower_bound: 0
+    align_state: left
+    show:
+      extrema: false
+      average: false
+      icon: true
+      name: true
+      state: true
+    entities:
+      - entity: sensor.heat_carrier_diff
+        show_state: true
+        name: Heat Carrier Temperature Difference
+    color_thresholds:
+      - value: 0
+        color: "var(--google-red)"
+      - value: 8
+        color: "var(--google-green)"
+      - value: 11
+        color: "var(--google-red)"
+
+  - type: custom:mini-graph-card
+    icon: hass:temperature
+    name: Additional Electric Heater
+    aggregate_func: avg
+    group_by: hour
+    fill: true
+    hour24: true
+    bar_spacing: 1
+    hours_to_show: 24
+    points_per_hour: 0.25
+    labels_secondary: true
+    show:
+      graph: bar
+    entities:
+      - entity: sensor.additional_electric_heater
+    color_thresholds:
+      - value: 0
+        color: "var(--google-blue)"
+      - value: 10
+        color: "var(--google-green)"
+      - value: 30
+        color: "var(--google-yellow)"
+      - value: 30
+        color: "var(--google-red)"
+
+  - type: history-graph
+    entities:
+      - entity: binary_sensor.alarm
+        name: Alarm
+      - entity: binary_sensor.brine_pump
+        name: Brine Pump
+      - entity: binary_sensor.compressor
+        name: Compressor
+      - entity: binary_sensor.heat_carrier_pump
+        name: Carrier Pump
+      - entity: binary_sensor.radiator_pump
+        name: Radiator Pump
+      - entity: binary_sensor.switch_valve
+        name: Switch Valve
+      - entity: switch.block_water_production
+    hours_to_show: 24
+    refresh_interval: 0
+
+  - type: "custom:button-card"
+    template: card_thermostat
+    entity: climate.room_temp_setpoint
+    variables:
+      ulm_card_thermostat_enable_collapse: false
+      ulm_card_thermostat_enable_controls: true
+      ulm_card_thermostat_enable_hvac_modes: false
+      ulm_card_thermostat_enable_popup: false
+      ulm_card_thermostat_enable_display_temperature: false
+      ulm_card_thermostat_name: "Room Temperature Setpoint"
+      ulm_card_thermostat_temp_step: 0.5
+
+  - type: "custom:button-card"
+    template: card_thermostat
+    entity: climate.heat_set_1_curve_l
+    variables:
+      ulm_card_thermostat_enable_collapse: false
+      ulm_card_thermostat_enable_controls: true
+      ulm_card_thermostat_enable_hvac_modes: false
+      ulm_card_thermostat_enable_popup: false
+      ulm_card_thermostat_enable_display_temperature: false
+      ulm_card_thermostat_name: "Heat Set 1 Curve L"
+      ulm_card_thermostat_temp_step: 0.5
+
+  - type: "custom:button-card"
+    template: card_thermostat
+    entity: climate.heat_set_2_curve_r
+    variables:
+      ulm_card_thermostat_enable_collapse: false
+      ulm_card_thermostat_enable_controls: true
+      ulm_card_thermostat_enable_hvac_modes: false
+      ulm_card_thermostat_enable_popup: false
+      ulm_card_thermostat_enable_display_temperature: false
+      ulm_card_thermostat_name: "Heat Set 2 Curve R"
+      ulm_card_thermostat_temp_step: 0.5 

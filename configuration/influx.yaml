@@ -1,0 +1,98 @@
+  host: !secret influx_url
+  ssl: true
+  port: 443
+  bucket: hass
+  organization: !secret influx_org
+  token: !secret influxdb_token
+  api_version: 2
+  max_retries: 3
+  include:
+    entities:
+     # Water Meter
+     # - sensor.water_meter_total_consumption
+     # Heat Pump
+      - binary_sensor.ivt_geo_500c_electric_heater_switch
+      - binary_sensor.alarm
+      - sensor.heat_pump_alarm_code
+      - sensor.rad_return
+      - sensor.heat_carrier_return
+      - sensor.heat_carrier_forward
+      - sensor.heat_pump_power_usage
+      - sensor.brine_in
+      - sensor.brine_out
+      - sensor.outdoor
+      - sensor.warm_water
+      - sensor.hot_gas
+      - sensor.circulation_pump_speed
+      - sensor.compressor_speed
+      - sensor.heating_setpoint
+      - sensor.ivt_geo_500c_heating_setpoint_2
+      - sensor.ivt_geo_500c_limit_auxiliary_heat
+      - sensor.ivt_geo_500c_limit_hot_water
+      - sensor.ivt_geo_500c_limit_compressor
+      - sensor.additional_electric_heater
+      - sensor.heat_pump_curve_left_target
+      - sensor.heat_pump_curve_right_target
+      - sensor.total_heatpump_consumption
+      - sensor.total_operation_time
+      - sensor.heat_pump_power_usage
+      - sensor.warm_water_setpoint
+      - sensor.auxillary_consumption_heating      
+      - sensor.auxillary_consumption_hot_water
+      - sensor.auxillary_consumption_total
+      - sensor.compressor_consumption_heating
+      - sensor.compressor_consumption_hot_water
+      - sensor.compressor_consumption_total
+      - sensor.heating_energy_supplied
+      - sensor.hot_water_energy_supplied
+      - sensor.total_energy_supplied
+        #Climate and Temperature Sensors
+      - sensor.hall_north_motion_sensor_temperature
+      - sensor.livia_bedroom_window_air_temperature
+      - sensor.heat_pump_room_temperature_target
+      - sensor.carbon_monoxide_sensor_air_temperature
+      - sensor.holly_room_climate_sensor_temperature
+      - sensor.holly_room_climate_sensor_humidity
+      - sensor.livia_radiator_thermostat_air_temperature
+      - sensor.livia_room_climate_temperature
+      - sensor.livia_room_climate_humidity
+      - sensor.livia_room_thermostat_target
+      - sensor.livia_radiator_thermostat_air_temperature
+      - sensor.livingroom_climate_sensor_temperature
+      - sensor.livingroom_climate_sensor_humidity
+      - sensor.master_bedroom_window_air_temperature
+      - sensor.master_bedroom_climate_sensor_humidity
+      - sensor.master_bedroom_climate_sensor_temperature
+      - sensor.master_bedroom_thermostat_target
+      - sensor.master_bedroom_thermostat_temperature
+      - sensor.stella_thermostat_air_temperature
+      - sensor.stella_room_thermostat_target
+      - sensor.stella_room_climate_sensor_temperature
+      - sensor.stella_room_climate_sensor_humidity
+      - sensor.mediaroom_climate_sensor_humidity
+      - sensor.mediaroom_climate_sensor_temperature
+      - sensor.basement_hall_north_motion_sensor_temperature
+      # Car Charger
+      - sensor.carcharger_energy_per_hour
+      - sensor.carcharger_current
+      - sensor.carcharger_power
+      - sensor.carcharger_cost_day
+      - sensor.carcharger_cost_month
+      - sensor.carcharger_cost_year
+      - sensor.carcharger_lifetime_energy
+      - sensor.carcharger_session_energy
+      - sensor.carcharger_energy_last_hour
+      - sensor.carcharger_circuit_current
+      #Energy Consumption & Electricity Prices
+      - sensor.postmaster_electricity_price
+      - sensor.elec_meter_elec_meter_total_energy_consumption
+      - sensor.living_room_media_switch_electric_consumption_kwh
+      - sensor.dishwasher_switch_electric_consumption_kwh
+      - sensor.media_room_computer_switch_electric_consumption_kwh
+      - sensor.chest_freezer_consumption
+      - sensor.freezer_consumption
+      - sensor.refrigerator_consumption
+      - sensor.media_room_computer_switch_electric_consumption_kwh
+      # Vehicle Sensors
+      - sensor.diesel_prices
+      - sensor.wvwzzzed4se023218_odometer

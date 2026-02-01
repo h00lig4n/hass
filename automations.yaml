@@ -1,0 +1,818 @@
+- id: '1724958962540'
+  alias: Vacuum - Cancel on Pause
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: vacuum.eve
+    to: paused
+    for: 00:05:00
+  - platform: state
+    entity_id: vacuum.eve
+    for: 00:05:00
+    to: idle
+  condition: []
+  action:
+  - target:
+      entity_id: script.1638472340200
+    action: script.turn_off
+    data: {}
+  - device_id: 2e88047f3817d8b3fc60d6314625d8ce
+    domain: vacuum
+    entity_id: vacuum.eve
+    type: dock
+  - target:
+      entity_id: script.1638472340200
+    action: script.turn_on
+    data: {}
+  mode: queued
+  max: 10
+- id: '1724959341369'
+  alias: Vacuum - Disable camera update when docked
+  description: ''
+  use_blueprint:
+    path: PiotrMachowski/disable_vacuum_camera_update_when_docked.yaml
+    input:
+      vacuum: vacuum.eve
+      camera: camera.xiaomi_cloud_map_extractor
+- id: '1724959387881'
+  alias: Vacuum - Notify on Error
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: vacuum.eve
+    to: error
+  condition: []
+  action:
+  - device_id: bad9625ebac68668d3b2271abc2f2b88
+    domain: mobile_app
+    type: notify
+    message: Eve has encountered an error.
+    title: EVE
+  - device_id: 3eed6612596bbd174ae63a1499058382
+    domain: mobile_app
+    type: notify
+    message: Eve has encountered an error.
+    title: EVE
+  mode: queued
+  max: 10
+- id: '1725787944389'
+  alias: Lamps - Pantry Lamp Toggle
+  description: Pantry Light Controlled by Door Sensor
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 639cf3cd39d16b15565fc21efc84a97f
+    entity_id: binary_sensor.pantry_door_sensor_contact
+    domain: binary_sensor
+    id: opened
+  - type: not_opened
+    platform: device
+    device_id: 639cf3cd39d16b15565fc21efc84a97f
+    entity_id: binary_sensor.pantry_door_sensor_contact
+    domain: binary_sensor
+    id: closed
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: opened
+      sequence:
+      - target:
+          entity_id: light.pantry_lamp
+        data:
+          brightness_pct: 80
+        action: light.turn_on
+    - conditions:
+      - condition: trigger
+        id: closed
+      sequence:
+      - target:
+          entity_id: light.pantry_lamp
+        action: light.turn_off
+        data: {}
+    default: []
+  mode: single
+- id: '1725897985806'
+  alias: 'Lamps - Garage Lights Automation '
+  description: Control the lamps in the garage
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.garage_motion_sensor_occupancy
+    to: 'on'
+    id: detected
+  - platform: state
+    entity_id:
+    - binary_sensor.garage_motion_sensor_occupancy
+    to: 'off'
+    id: clear
+  - platform: state
+    id: detected
+    entity_id:
+    - media_player.garage_tv
+    to: playing
+  - platform: state
+    id: clear
+    entity_id:
+    - media_player.garage_tv
+    to: 'off'
+  - platform: state
+    id: clear
+    entity_id:
+    - media_player.garage_tv
+    to: idle
+  - platform: state
+    id: clear
+    entity_id:
+    - media_player.garage_tv
+    to: standby
+  - platform: state
+    id: clear
+    entity_id:
+    - media_player.garage_tv
+    to: unavailable
+  - platform: state
+    id: clear
+    entity_id:
+    - media_player.garage_tv
+    to: unknown
+  - platform: state
+    id: detected
+    entity_id:
+    - media_player.garage_tv
+    to: buffering
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: detected
+      sequence:
+      - data:
+          brightness_pct: 100
+        target:
+          entity_id: light.garage_lamps
+        action: light.turn_on
+    - conditions:
+      - condition: trigger
+        id: clear
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: media_player.garage_tv
+          state: 'off'
+        - condition: state
+          entity_id: media_player.garage_tv
+          state: idle
+        - condition: state
+          entity_id: media_player.garage_tv
+          state: standby
+        - condition: state
+          entity_id: media_player.garage_tv
+          state: unavailable
+        - condition: state
+          entity_id: media_player.garage_tv
+          state: unknown
+      sequence:
+      - data: {}
+        target:
+          entity_id: light.garage_lamps
+        action: light.turn_off
+  mode: single
+- id: '1725898293105'
+  alias: Lawnmower - Wall-E Error
+  description: Wall-E has encountered an error
+  triggers:
+  - entity_id:
+    - vacuum.wall_e
+    to: error
+    trigger: state
+  conditions: []
+  actions:
+  - device_id: bad9625ebac68668d3b2271abc2f2b88
+    domain: mobile_app
+    type: notify
+    message: Wall-E has encountered an error.
+    title: Wall-E
+  - device_id: 0567919cfceac91e162d2fe40ee0d098
+    domain: mobile_app
+    type: notify
+    message: Wall-E has encountered an error.
+    title: Wall-E
+  mode: queued
+  max: 10
+- id: '1725898533207'
+  alias: Lamps - Basement Entrance
+  description: Control Basement Entrance Lights
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.basement_hall_entrance_sensor_occupancy
+    to: 'on'
+    from: 'off'
+    id: motion
+  - platform: state
+    entity_id:
+    - binary_sensor.basement_hall_entrance_sensor_occupancy
+    from: 'on'
+    to: 'off'
+    id: no_motion
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: no_motion
+      sequence:
+      - data: {}
+        action: light.turn_off
+        target:
+          entity_id: light.basement_hall_entrance_lamps
+    - conditions:
+      - condition: trigger
+        id: motion
+      sequence:
+      - data:
+          brightness_pct: 100
+        action: light.turn_on
+        target:
+          entity_id: light.basement_hall_entrance_lamps
+    default: []
+  mode: single
+- id: '1725909799061'
+  alias: Elec - Load Balancer
+  description: Perform Load Balancing of Car Charger
+  triggers:
+  - entity_id:
+    - sensor.elec_meter_elec_meter_current_l1
+    id: currentchange
+    trigger: state
+  - entity_id:
+    - sensor.elec_meter_elec_meter_current_l2
+    id: currentchange
+    trigger: state
+  - entity_id:
+    - sensor.elec_meter_elec_meter_current_l3
+    id: currentchange
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: sensor.carcharger_status
+    state: charging
+  - condition: numeric_state
+    entity_id: sensor.carcharger_dynamic_circuit_limit
+    attribute: state_dynamicCircuitCurrentP1
+    above: 6
+  - condition: numeric_state
+    entity_id: sensor.carcharger_dynamic_circuit_limit
+    attribute: state_dynamicCircuitCurrentP2
+    above: 6
+  - condition: numeric_state
+    entity_id: sensor.carcharger_dynamic_circuit_limit
+    attribute: state_dynamicCircuitCurrentP3
+    above: 6
+    enabled: false
+  actions:
+  - data:
+      device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+      time_to_live: 1
+      current_p1: "{% set charge = 25 - (states('sensor.elec_meter_elec_meter_current_l1')
+        | int(25) | round(0,'ceil'))\n                   + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP1')
+        | int(16) | round(0,'ceil')) %}\n{% if charge > 16 %} {{   16   }} {%- else
+        -%} {{ charge }} {%- endif %}"
+      current_p2: "{% set charge = 25 - (states('sensor.elec_meter_elec_meter_current_l2')
+        | int(25) | round(0,'ceil'))\n                   + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP2')
+        | int(16) | round(0,'ceil')) %}\n{% if charge > 16 %} {{   16   }} {%- else
+        -%} {{ charge }} {%- endif %}"
+      current_p3: "{% set charge = 25 - (states('sensor.elec_meter_elec_meter_current_l3')
+        | int(25) | round(0,'ceil'))\n                   + (state_attr('sensor.carcharger_dynamic_circuit_limit','state_dynamicCircuitCurrentP3')
+        | int(16) | round(0,'ceil')) %}\n{% if charge > 16 %} {{   16   }} {%- else
+        -%} {{ charge }} {%- endif %}"
+    action: easee.set_circuit_dynamic_limit
+  mode: single
+  max_exceeded: silent
+- id: '1725909904225'
+  alias: Elec - UpdateChargerCost
+  description: Updates the SEK/kWh cost for the car charger
+  triggers:
+  - entity_id:
+    - sensor.postmaster_electricity_price
+    trigger: state
+  conditions: []
+  actions:
+  - data:
+      device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+      cost_per_kwh: '{{states(''sensor.postmaster_electricity_price'') }}'
+      currency_id: SEK
+    action: easee.set_charging_cost
+  mode: single
+- id: '1725909966021'
+  alias: Elec - Electricity Price Consumption Toggle
+  description: Toggle's stuff on and off dependent upon current electricity price.
+  triggers:
+  - value_template: '{{ ( states(''sensor.postmaster_electricity_price'') | float(0)
+      <= states(''input_number.electricity_ceiling'') | float(0) ) and states(''sensor.postmaster_electricity_price'')
+      !=  ''unavailable''  }}'
+    id: cheap
+    alias: Becomes cheap
+    trigger: template
+  - entity_id:
+    - sensor.carcharger_status
+    from: disconnected
+    to:
+    id: reconnected
+    alias: Reconnected
+    trigger: state
+  - id: expensive
+    value_template: '{{ ( states(''sensor.postmaster_electricity_price'') | float(0)
+      > states(''input_number.electricity_ceiling'') | float(0) ) or is_state(''sensor.postmaster_electricity_price'',
+      ''unavailable'' ) }}'
+    alias: Becomes expensive
+    trigger: template
+  - trigger: state
+    entity_id:
+    - sensor.carcharger_status
+    to: charging
+    id: Charging
+    alias: Starts Charging
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: cheap
+      - condition: state
+        entity_id: binary_sensor.peak_effect_charge
+        state:
+        - 'off'
+      sequence:
+      - data: {}
+        response_variable: startResponse
+        action: script.start_car_charger
+    - conditions:
+      - condition: trigger
+        id: expensive
+      sequence:
+      - if:
+        - condition: state
+          entity_id: sensor.carcharger_status
+          state: charging
+        then:
+        - data:
+            device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+            action_command: stop
+          action: easee.action_command
+      - alias: Set Current For Charger
+        data:
+          device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+          current_p1: 5
+          current_p2: 5
+          current_p3: 5
+          time_to_live: 0
+        action: easee.set_circuit_dynamic_limit
+    - conditions:
+      - condition: trigger
+        id: reconnected
+      - condition: template
+        value_template: '{{ ( states(''sensor.postmaster_electricity_price'') | float(0)
+          <= states(''input_number.electricity_ceiling'') | float(0) ) and states(''sensor.postmaster_electricity_price'')
+          !=  ''unavailable''  }}'
+        alias: Test if cheap
+      - condition: state
+        entity_id: binary_sensor.peak_effect_charge
+        state:
+        - 'off'
+      sequence:
+      - data: {}
+        action: script.start_car_charger
+      alias: Reconnected and Cheap
+    - conditions:
+      - condition: trigger
+        id: reconnected
+      - condition: template
+        value_template: '{{ ( states(''sensor.postmaster_electricity_price'') | float(0)
+          > states(''input_number.electricity_ceiling'') | float(0) ) or states(''sensor.postmaster_electricity_price'')
+          ==  ''unavailable''  }}'
+        alias: Test if expensive
+      sequence:
+      - action: easee.action_command
+        metadata: {}
+        data:
+          device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+          action_command: stop
+      alias: Reconnected and Expensive
+    - conditions:
+      - condition: trigger
+        id:
+        - Charging
+      - condition: template
+        value_template: '{{ ( states(''sensor.postmaster_electricity_price'') | float(0)
+          > states(''input_number.electricity_ceiling'') | float(0) ) or states(''sensor.postmaster_electricity_price'')
+          ==  ''unavailable''  }}'
+        alias: Is expensive
+      sequence:
+      - action: easee.action_command
+        data:
+          device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+          action_command: stop
+      - action: easee.set_circuit_dynamic_limit
+        data:
+          current_p1: 5
+          current_p2: 5
+          current_p3: 5
+          time_to_live: 0
+          device_id: 992d6a5815215a0a47b1d2f7238c3f7d
+      alias: Charging and expensive
+  mode: single
+  trace:
+    stored_traces: 10
+- id: '1725913649881'
+  alias: Lamps - Porch and Driveway Lights
+  description: Control Porch lights based on sun
+  triggers:
+  - event: sunset
+    id: 'on'
+    offset: '0'
+    trigger: sun
+  - event: sunrise
+    offset: '0'
+    id: 'off'
+    trigger: sun
+  - at: '23:00:00'
+    id: 'off'
+    trigger: time
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: 'on'
+      - condition: state
+        entity_id: light.porch_lamp
+        state: 'off'
+        for:
+          hours: 0
+          minutes: 2
+          seconds: 0
+      sequence:
+      - data:
+          brightness: 10
+        target:
+          entity_id: light.porch_lamp
+        action: light.turn_on
+      - action: light.turn_on
+        metadata: {}
+        data:
+          brightness_pct: 10
+        target:
+          entity_id: light.driveway_lamp
+    - conditions:
+      - condition: state
+        entity_id: light.porch_lamp
+        state: 'on'
+        for:
+          hours: 0
+          minutes: 2
+          seconds: 0
+      - condition: trigger
+        id: 'off'
+      sequence:
+      - data: {}
+        action: light.turn_off
+        target:
+          entity_id: light.porch_lamp
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: light.driveway_lamp
+  mode: single
+- id: '1725914431310'
+  alias: Water - Leak Detection Garage Gym
+  description: Deetction of water in Garage Gym
+  triggers:
+  - entity_id:
+    - binary_sensor.garage_water_leak_sensor_water_leak
+    from: 'off'
+    to: 'on'
+    trigger: state
+  conditions: []
+  actions:
+  - action: persistent_notification.create
+    data:
+      message: Water leak detected in Garage Gym
+      title: Garage Gym - Water Detected
+  mode: single
+- id: '1727714473816'
+  alias: Master Bedroom Radiator Thermostat
+  description: Control Master Bedroom Thermostats
+  trigger:
+  - platform: time
+    at: 07:00:00
+    id: heatup
+  - platform: time
+    at: '20:00:00'
+    id: cooldown
+  - platform: time
+    at: '17:00:00'
+    id: cooldown-start
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: heatup
+      sequence:
+      - target:
+          entity_id:
+          - climate.master_bedroom_thermostat
+        data:
+          temperature: 21
+          hvac_mode: heat
+        action: climate.set_temperature
+    - conditions:
+      - condition: trigger
+        id: cooldown-start
+      sequence:
+      - data:
+          temperature: 19
+        target:
+          entity_id:
+          - climate.master_bedroom_thermostat
+        action: climate.set_temperature
+    - conditions:
+      - condition: trigger
+        id: cooldown
+      sequence:
+      - target:
+          entity_id: climate.master_bedroom_thermostat
+        data:
+          temperature: 17
+        action: climate.set_temperature
+    default: []
+  mode: single
+- id: '1728490160821'
+  alias: Bedroom Thermostats
+  description: Control Bedroom Thermostats
+  triggers:
+  - at: 08:00:00
+    id: heatup-early
+    trigger: time
+  - at: '20:00:00'
+    id: cooldown
+    trigger: time
+  - at: '17:00:00'
+    id: cooldown-start
+    trigger: time
+  - at: '10:00:00'
+    id: heatup-late
+    trigger: time
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: cooldown-start
+      sequence:
+      - data:
+          temperature: 19
+        target:
+          entity_id:
+          - climate.stella_thermostat
+        action: climate.set_temperature
+    - conditions:
+      - condition: trigger
+        id: cooldown
+      sequence:
+      - target:
+          entity_id:
+          - climate.stella_thermostat
+        data:
+          temperature: 17
+        action: climate.set_temperature
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.kids_week
+        state: 'on'
+      - condition: and
+        conditions:
+        - condition: trigger
+          id:
+          - heatup-late
+      sequence:
+      - target:
+          entity_id:
+          - climate.stella_thermostat
+        data:
+          temperature: 21
+          hvac_mode: heat
+        action: climate.set_temperature
+    - conditions:
+      - condition: state
+        entity_id: binary_sensor.kids_week
+        state: 'off'
+      - condition: and
+        conditions:
+        - condition: trigger
+          id:
+          - heatup-early
+      sequence:
+      - target:
+          entity_id:
+          - climate.stella_thermostat
+        data:
+          temperature: 21
+          hvac_mode: heat
+        action: climate.set_temperature
+    default: []
+  mode: single
+- id: '1729435233688'
+  alias: Sunrise Alarm Start
+  description: Wakeup with sunrise then music
+  triggers:
+  - value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.wakeup_time'',
+      ''timestamp'') - 30*60)|timestamp_custom(''%H:%M'', false) }}'
+    trigger: template
+  conditions:
+  - condition: state
+    entity_id: input_boolean.wakeup
+    state: 'on'
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+    - sun
+  actions:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0
+    target:
+      entity_id: media_player.master_bedroom
+  - action: media_player.play_media
+    metadata: {}
+    data:
+      media_content_type: music
+      enqueue: play
+      media_content_id: /media/media/dawn_chorus.mp3
+    target:
+      entity_id: media_player.master_bedroom
+  - action: media_player.repeat_set
+    metadata: {}
+    data:
+      repeat: all
+    target:
+      entity_id: media_player.master_bedroom
+  - parallel:
+    - action: script.sunrise_sound
+      metadata: {}
+      data: {}
+    - action: script.sunrise_light
+      metadata: {}
+      data: {}
+  mode: single
+  initial_state: true
+- id: '1739812944818'
+  alias: Basement Heater
+  description: Turns heater on and off
+  triggers:
+  - trigger: time
+    at: 07:00:00
+    id: start
+  - trigger: time
+    at: '17:30:00'
+    id: end
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - thu
+    - fri
+  actions:
+  - choose:
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: trigger
+          id:
+          - start
+        - condition: numeric_state
+          entity_id: sensor.mediaroom_climate_sensor_temperature
+          below: 18.5
+      sequence:
+      - action: switch.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.media_room_heater_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - end
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: switch.media_room_heater_switch
+  mode: single
+- id: '1739814216141'
+  alias: Sync Master Bedroom Thermostat
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - sensor.master_bedroom_climate_sensor_temperature
+    id: temp_change
+  - trigger: numeric_state
+    entity_id:
+    - number.master_bedroom_thermostat_external_measured_room_sensor
+    below: 0
+  conditions: []
+  actions:
+  - action: number.set_value
+    target:
+      entity_id: number.master_bedroom_thermostat_external_measured_room_sensor
+    data:
+      value: '{{ states(''sensor.master_bedroom_climate_sensor_temperature'') | float(2)
+        }}'
+  mode: single
+- id: '1767703498182'
+  alias: Enable Bike Charger
+  description: ''
+  triggers:
+  - alias: After 10 PM
+    trigger: time
+    at: '22:00:00'
+    id: cheap
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  - alias: Weekday 0659
+    trigger: time
+    at: 06:59:00
+    id: expensive
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  - alias: charged
+    trigger: numeric_state
+    entity_id:
+    - sensor.garage_bike_charger_switch_current
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    below: 0.1
+    id: charged
+    above: 0
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - expensive
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id: switch.garage_bike_charger_switch
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - cheap
+      sequence:
+      - action: switch.turn_on
+        metadata: {}
+        target:
+          entity_id: switch.garage_bike_charger_switch
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - charged
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        target:
+          entity_id: switch.garage_bike_charger_switch
+        data: {}
+  mode: single

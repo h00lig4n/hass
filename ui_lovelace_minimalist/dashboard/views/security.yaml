@@ -1,0 +1,437 @@
+title: "Security"
+path: "security"
+subview: true
+cards:
+  - type: "custom:button-card"
+    template: chip_back
+    variables:
+      ulm_chip_back_path: /ui-lovelace-minimalist/home
+  - type: horizontal-stack
+    cards:   
+      - type: 'custom:button-card'
+        template: chip_navigate
+        label: Hall
+        variables:
+          ulm_chip_navigate_icon: mdi:cctv
+          ulm_chip_navigate_path: "/ui-lovelace-minimalist/camera-hall"
+          ulm_chip_navigate_icon_color: "var(--google-blue)"
+      - type: 'custom:button-card'
+        template: chip_navigate
+        label: Decking
+        variables:
+          ulm_chip_navigate_icon: mdi:cctv
+          ulm_chip_navigate_path: "/ui-lovelace-minimalist/camera-decking"
+          ulm_chip_navigate_icon_color: "var(--google-yellow)"
+      - type: 'custom:button-card'
+        template: chip_navigate
+        label: Garden
+        variables:
+          ulm_chip_navigate_icon: mdi:cctv
+          ulm_chip_navigate_path: "/ui-lovelace-minimalist/camera-garden"
+          ulm_chip_navigate_icon_color: "var(--google-red)"
+      - type: 'custom:button-card'
+        template: chip_navigate
+        label: Laundry
+        variables:
+          ulm_chip_navigate_icon: mdi:cctv
+          ulm_chip_navigate_path: "/ui-lovelace-minimalist/camera-laundry"
+          ulm_chip_navigate_icon_color: "var(--google-green)"
+# Doors and Windows - Alerts
+# Basement
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.garage_door_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.garage_door_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Garage Door"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:garage-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.basement_outer_door_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.basement_outer_door_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Basement Entrance"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:door-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.garage_inner_door_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.garage_inner_door_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Basement Garage Inner Door"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:door-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.holly_bedroom_window_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_generic_swap
+      entity: binary_sensor.holly_bedroom_window_window_door_is_open
+      variables:
+        ulm_card_generic_swap_name: "Livia's Bedroom Window"
+        ulm_card_generic_swap_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.storage_room_window_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.storage_room_window_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Storage Room Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.laundry_room_window_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.laundry_room_window_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Laundry Room Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.media_room_window_1_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.media_room_window_1_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Media Room Window 1"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"        
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.media_room_window_2_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.media_room_window_2_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Media Room Window 2"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.media_room_window_3_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.media_room_window_3_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Media Room Window 3"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+        
+# Ground Floor
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.kitchen_window_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.kitchen_window_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Kitchen Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.0x00158d0007d39179_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.0x00158d0007d39179_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Kitchen Side Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.living_room_left_window_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.living_room_left_window_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Living Room Left Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.living_room_right_window_sensor_contact
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.living_room_right_window_sensor_contact
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Living Room Right Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.garden_door_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.garden_door_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Living Room Garden Door"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:door-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.entrance_door_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.entrance_door_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Hall Entrance Door"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:door-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.livia_bedroom_window_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.livia_bedroom_window_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Front Bedroom Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.master_bedroom_window_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.master_bedroom_window_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Master Bedroom Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.stella_garden_door_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.stella_garden_door_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Stella Bedroom Door"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:door-open"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.leon_bedroom_window_window_door_is_open
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.leon_bedroom_window_window_door_is_open
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Leon Bedroom Window"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:window-open"
+# Motion Sensors
+# Basement
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.basement_hall_north_motion_sensor_occupancy
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.basement_hall_north_motion_sensor_occupancy
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Basement Hall"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:home-floor-b"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.basement_hall_entrance_sensor_occupancy
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.basement_hall_entrance_sensor_occupancy
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Basement Entrance"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:door"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.garage_motion_sensor_occupancy
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_generic_swap
+      entity: binary_sensor.garage_motion_sensor_occupancy
+      variables:
+        ulm_card_generic_swap_name: "Garage"
+        ulm_card_generic_swap_icon: "mdi:garage-alert"
+#Ground Floor
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.deckingcam_cell_motion_detection
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: 
+        - card_binary_sensor_alert
+        - ulm_actions_card_overlay
+      entity: binary_sensor.deckingcam_cell_motion_detection
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Garden"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:cctv"
+        ulm_card_tap_action: "navigate"
+        ulm_card_tap_navigate_path: "/ui-lovelace-minimalist/camera-garden"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.living_room_motion_sensor_occupancy
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.living_room_motion_sensor_occupancy
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Living Room"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:sofa"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.hall_camera_cell_motion_detection
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: 
+        - card_binary_sensor_alert
+        - ulm_actions_card_overlay
+      entity: binary_sensor.hall_camera_cell_motion_detection
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Hall"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:cctv"
+        ulm_card_tap_action: "navigate"
+        ulm_card_tap_navigate_path: "/ui-lovelace-minimalist/camera-hall"
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.hall_north_motion_sensor_occupancy
+        state_not: "off"
+    card:
+      type: "custom:button-card"
+      template: card_binary_sensor_alert
+      entity: binary_sensor.hall_north_motion_sensor_occupancy
+      variables:
+        ulm_card_binary_sensor_alert: true
+        ulm_card_binary_sensor_show_last_changed: true
+        ulm_card_binary_sensor_alert_name: "Hall"
+        ulm_card_binary_sensor_alert_color: "var(--google-red)"
+        ulm_card_binary_sensor_alert_icon: "mdi:home-floor-g"

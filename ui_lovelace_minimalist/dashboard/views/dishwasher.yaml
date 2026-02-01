@@ -1,0 +1,170 @@
+title: "Dishwasher"
+path: "dishwasher"
+subview: true
+cards:
+  # Dishwasher Status Chips
+  - type: horizontal-stack
+    cards:
+      - type: "custom:button-card"
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /ui-lovelace-minimalist/home
+      - type: 'custom:button-card'
+        template: chip_mdi_icon_state
+        variables:
+          ulm_chip_mdi_icon_state_entity: binary_sensor.405060553719002513_bsh_common_status_doorstate
+      - type: 'custom:button-card'
+        template: chip_mdi_icon_state
+        variables:
+          ulm_chip_mdi_icon_state_entity: sensor.405060553719002513_bsh_common_status_operationstate
+      - type: 'custom:button-card'
+        template: chip_mdi_icon_state
+        variables:
+          ulm_chip_mdi_icon_state_entity: sensor.405060553719002513_selected_program
+
+  # Dishwasher Controls
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Inactive
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Ready
+    card:
+      type: tile
+      entity: select.405060553719002513_programs
+      name: Program
+      vertical: false
+      features_position: bottom
+
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Inactive
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Ready
+    card:
+      type: "custom:button-card"
+      template:
+        - custom_card_card_input_datetime
+      entity: input_datetime.dishwasher_start_time
+      variables:
+        ulm_card_input_datetime_name: "Set Start Time"
+
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Inactive
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Ready
+    card:    
+      type: horizontal-stack
+      cards:
+        - type: 'custom:button-card'
+          template: card_script
+          variables:
+            ulm_card_script_title: Start Program
+            ulm_card_script_icon: 'mdi:play'
+          tap_action:
+            action: perform-action
+            perform_action: script.set_dishwasher_program
+        - type: "custom:button-card"
+          template: card_light
+          entity: switch.405060553719002513_dishcare_dishwasher_option_variospeedplus
+          variables:
+            ulm_card_light_name: "Speed+"
+            ulm_card_light_icon: mdi:fast-forward
+
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Inactive
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Ready
+    card:
+      type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: switch.405060553719002513_dishcare_dishwasher_option_halfload
+          variables:
+            ulm_card_light_name: "Half Load"
+            ulm_card_light_icon: mdi:fraction-one-half
+        - type: "custom:button-card"
+          template: card_light
+          entity: switch.405060553719002513_dishcare_dishwasher_option_extradry
+          variables:
+            ulm_card_light_name: "Extra Dry"
+            ulm_card_light_icon: mdi:hair-dryer
+
+  - type: conditional
+    conditions:
+      - condition: or
+        conditions:
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.DelayedStart
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Run
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Pause
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.ActionRequired
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Error
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Finished
+          - condition: state
+            entity: sensor.405060553719002513_bsh_common_status_operationstate
+            state: BSH.Common.EnumType.OperationState.Aborting
+    card:
+      type: horizontal-stack
+      cards:
+        - type: 'custom:button-card'
+          template: card_script
+          variables:
+            ulm_card_script_title: Stop
+            ulm_card_script_icon: 'mdi:stop'
+          tap_action:
+            action: home_connect_alt.stop_program
+            data:
+              device_id: 405060553719002513
+        - type: 'custom:button-card'
+          template: card_generic
+          entity: sensor.dishwasher_remaing_time
+          variables:
+            ulm_card_generic_name: "Finish Time"
+            ulm_card_generic_icon: mdi:clock
+
+  # Dishwasher Power Usage Graph  
+  - type: "custom:button-card"
+    template: card_graph
+    entity: sensor.dishwasher_switch_power
+    variables:
+      ulm_card_graph_color: "var(--google-red)"
+      ulm_card_graph_name: Dishwasher Power
+      ulm_card_graph_entity: sensor.dishwasher_switch_power
+      ulm_card_graph_type: fill
+      ulm_card_graph_hours: 24
+      ulm_card_graph_group_by: interval
+      ulm_card_graph_line_width: 5

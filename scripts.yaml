@@ -1,0 +1,359 @@
+'1638472340200':
+  alias: Roborock Room Cleaning
+  sequence:
+  - choose:
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: vacuum.eve
+          state: cleaning
+        - condition: state
+          entity_id: vacuum.eve
+          state: error
+      sequence:
+      - wait_for_trigger:
+        - platform: state
+          entity_id: vacuum.eve
+          to: returning
+        - platform: state
+          entity_id: vacuum.eve
+          to: docked
+        continue_on_timeout: false
+        timeout: 01:30:00
+      - service: vacuum.send_command
+        target:
+          device_id: 2e88047f3817d8b3fc60d6314625d8ce
+        data_template:
+          command: app_segment_clean
+          params: '{% set room_id = states("input_number.roborock_room_enum_" + room)
+            | int %} {{ room_id }}
+
+            '
+      - wait_for_trigger:
+        - platform: state
+          entity_id: vacuum.eve
+          to: returning
+        - platform: state
+          entity_id: vacuum.eve
+          to: docked
+        continue_on_timeout: false
+        timeout: 01:30:00
+    - conditions:
+      - condition: or
+        conditions:
+        - condition: state
+          entity_id: vacuum.eve
+          state: returning
+        - condition: state
+          entity_id: vacuum.eve
+          state: docked
+        - condition: state
+          entity_id: vacuum.eve
+          state: idle
+      sequence:
+      - service: vacuum.send_command
+        target:
+          device_id: 2e88047f3817d8b3fc60d6314625d8ce
+        data_template:
+          command: app_segment_clean
+          params: '{% set room_id = states("input_number.roborock_room_enum_" + room)
+            | int %} {{ room_id }}
+
+            '
+      - wait_for_trigger:
+        - platform: state
+          entity_id: vacuum.eve
+          to: returning
+        - platform: state
+          entity_id: vacuum.eve
+          to: docked
+        continue_on_timeout: false
+        timeout: 01:30:00
+    default: []
+  mode: queued
+  max: 30
+  fields:
+    room:
+      name: Room
+      required: true
+      example: living_room
+      selector:
+        select:
+          options:
+          - entrance_hall
+          - hall
+          - livia_bedroom
+          - stella_bedroom
+          - master_bedroom
+          - kitchen
+          - living_room
+  icon: mdi:robot-vacuum-variant
+start_car_charger:
+  alias: Start Car Charger
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ (states(''sensor.carcharger_cost_per_kwh'') | float) !=
+        (states(''sensor.postmaster_electricity_price'') | float )}}'
+    then:
+    - data:
+        charger_id: EHTREFV2
+        cost_per_kwh: '{{ states(''sensor.postmaster_electricity_price'') | float
+          }}'
+      action: easee.set_charging_cost
+    alias: Set Charging Cost SEK/KwH
+  - alias: Set Current For Charger
+    data:
+      charger_id: EHTREFV2
+      current_p1: '{{ [25 - states(''sensor.elec_meter_elec_meter_current_l1'') |
+        int(25), 16] | min }}'
+      current_p2: '{{ [25 - states(''sensor.elec_meter_elec_meter_current_l2'') |
+        int(25), 16] | min }}'
+      current_p3: '{{ [25 - states(''sensor.elec_meter_elec_meter_current_l3'') |
+        int(25), 16] | min }}'
+      time_to_live: 1
+    action: easee.set_circuit_dynamic_limit
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+    enabled: true
+  - if:
+    - condition: state
+      entity_id: sensor.carcharger_status
+      state: awaiting_start
+    then:
+    - data:
+        charger_id: EHTREFV2
+        action_command: resume
+      action: easee.action_command
+    else:
+    - data:
+        charger_id: EHTREFV2
+        action_command: start
+      action: easee.action_command
+    enabled: true
+    alias: Initial Start or Resume
+  - alias: Awaiting Authorization
+    if:
+    - condition: state
+      entity_id: sensor.carcharger_status
+      state: awaiting_authorization
+    then:
+    - repeat:
+        sequence:
+        - metadata: {}
+          data:
+            level: warning
+            message: Car charger didn't start yet
+          action: system_log.write
+        - data:
+            charger_id: EHTREFV2
+            action_command: start
+          action: easee.action_command
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 30
+            milliseconds: 0
+        until:
+        - alias: Charger not started
+          condition: template
+          value_template: "{{ is_state('sensor.carcharger_status', 'charging') or\n
+            \       repeat.index >= 10 }}"
+  mode: single
+  icon: mdi:ev-station
+record_hall_camera:
+  alias: Record Hall Camera
+  sequence:
+  - data:
+      filename: /media/hall/fgmotion_{{ now().strftime('%Y-%m-%d-%H-%M-%S')         }}.mp4
+      duration: 30
+      lookback: 5
+    target:
+      device_id: 91c9cb25f49b947fe1355684459a8577
+    action: camera.record
+  mode: single
+  icon: mdi:record-rec
+  description: ''
+bedtime:
+  alias: Bedtime
+  sequence:
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - light.living_room_lamps
+      - light.hall_lamps
+  - action: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.living_room_media_switch
+  description: Turn off stuff
+  icon: mdi:bed
+sunrise_sound:
+  sequence:
+  - repeat:
+      while:
+      - condition: template
+        value_template: '{{ state_attr(''media_player.master_bedroom'', ''volume_level'')  <
+          0.7}}'
+      sequence:
+      - data_template:
+          entity_id: media_player.master_bedroom
+          volume_level: '{{ state_attr(''media_player.master_bedroom'', ''volume_level'')
+            + 0.05 }}'
+        action: media_player.volume_set
+      - delay:
+          hours: 0
+          minutes: 3
+          seconds: 1
+          milliseconds: 0
+  alias: Sunrise Sound
+  description: Manage volume during sunrise alarm
+  icon: mdi:sun-clock
+sunrise_light:
+  alias: Sunrise Light
+  sequence:
+  - scene: scene.master_bedroom_lamps_0_sunrise
+  - delay:
+      seconds: 1
+  - data:
+      entity_id: light.master_bedroom_lamps
+      xy_color:
+      - 0.65
+      - 0.41
+      brightness: 85
+      transition: 600
+    action: light.turn_on
+  - delay:
+      seconds: 600
+  - data:
+      entity_id: light.master_bedroom_lamps
+      xy_color:
+      - 0.6
+      - 0.4
+      brightness: 170
+      transition: 600
+    action: light.turn_on
+  - delay:
+      seconds: 600
+  - data:
+      entity_id: light.master_bedroom_lamps
+      xy_color:
+      - 0.48
+      - 0.4
+      brightness: 255
+      transition: 600
+    action: light.turn_on
+  mode: single
+  icon: mdi:weather-sunset-up
+  description: ''
+set_dishwasher_program:
+  sequence:
+  - action: home_connect_alt.select_program
+    data:
+      validate: true
+      device_id: 793d0344d5ccf551ef9e1c0b9998641e
+      program_key: '{{ states(''select.405060553719002513_programs'') }}'
+      options:
+      - key: Dishcare.Dishwasher.Option.VarioSpeedPlus
+        value: '{{ is_state(''binary_sensor.405060553719002513_dishcare_dishwasher_option_variospeedplus'',
+          ''on'') }}'
+      - key: Dishcare.Dishwasher.Option.HalfLoad
+        value: '{{ is_state(''binary_sensor.405060553719002513_dishcare_dishwasher_option_halfload'',
+          ''on'') }}'
+      - key: Dishcare.Dishwasher.Option.ExtraDry
+        value: '{{ is_state(''binary_sensor.405060553719002513_dishcare_dishwasher_option_extradry'',
+          ''on'') }}'
+    alias: Set Program and Options
+  - alias: Start Program with Options
+    action: home_connect_alt.start_program
+    data:
+      validate: true
+      device_id: 793d0344d5ccf551ef9e1c0b9998641e
+      options:
+      - key: BSH.Common.Option.StartInRelative
+        value: "{% set time_str = states('input_datetime.dishwasher_start_time') %}
+          {% set now_dt = now().replace(second=0, microsecond=0) %} {% set target_time
+          = strptime(time_str, '%H:%M:%S') %} {% set target_dt = now_dt.replace(hour=target_time.hour,
+          minute=target_time.minute) %} {% if target_dt < now_dt %}\n  {% set target_dt
+          = target_dt + timedelta(days=1) %}\n{% endif %} {{ (target_dt - now_dt).total_seconds()
+          | int }}"
+      - key: Dishcare.Dishwasher.Option.VarioSpeedPlus
+        value: '{{ is_state(''binary_sensor.405060553719002513_dishcare_dishwasher_option_variospeedplus'',
+          ''on'') }}'
+      - key: Dishcare.Dishwasher.Option.HalfLoad
+        value: '{{ is_state(''binary_sensor.405060553719002513_dishcare_dishwasher_option_halfload'',
+          ''on'') }}'
+      - key: Dishcare.Dishwasher.Option.ExtraDry
+        value: '{{ is_state(''binary_sensor.405060553719002513_dishcare_dishwasher_option_extradry'',
+          ''on'') }}'
+  alias: Set and Start Dishwasher
+  description: Sets the program and starts it.
+  icon: mdi:dishwasher
+find_best_dishwasher_start_time:
+  alias: Find Best Dishwasher Start Time
+  description: Calculates cheapest 4-hour time window
+  mode: single
+  sequence:
+  - variables:
+      price_today: '{{ state_attr(''sensor.tibber_prices'', ''today'') | default([])
+        }}'
+      price_tomorrow: '{{ state_attr(''sensor.tibber_prices'', ''tomorrow'') | default([])
+        }}'
+      merged: '{{ price_today + price_tomorrow }}'
+      now_dt: '{{ now() | as_datetime }}'
+      weekday: '{{ now().weekday() }}'
+  - variables:
+      window_start: "{% if weekday <= 4 %}\n  {{ now_dt.replace(hour=19, minute=0,
+        second=0, microsecond=0) }}\n{% else %}\n  {% set ns = namespace(dt_list=[])
+        %}\n  {% for item in merged %}\n    {% if item is mapping and 'startsAt' in
+        item %}\n      {% set ns.dt_list = ns.dt_list + [item.startsAt | as_datetime]
+        %}\n    {% endif %}\n  {% endfor %}\n  {% if ns.dt_list | length > 0 %}\n
+        \   {{ ns.dt_list | min }}\n  {% else %}\n    {{ now_dt }}\n  {% endif %}\n{%
+        endif %}\n"
+      window_end: "{% if weekday <= 4 %}\n  {{ (now_dt + timedelta(days=1)).replace(hour=3,
+        minute=0, second=0, microsecond=0) }}\n{% else %}\n  {% set ns = namespace(dt_list=[])
+        %}\n  {% for item in merged %}\n    {% if item is mapping and 'startsAt' in
+        item %}\n      {% set ns.dt_list = ns.dt_list + [item.startsAt | as_datetime]
+        %}\n    {% endif %}\n  {% endfor %}\n  {% if ns.dt_list | length > 0 %}\n
+        \   {{ ns.dt_list | max }}\n  {% else %}\n    {{ now_dt + timedelta(hours=4)
+        }}\n  {% endif %}\n{% endif %}\n"
+      steps: 16
+      best_cost: 999999
+      best_start: unavailable
+  - repeat:
+      for_each: "{{ merged\n   | selectattr('startsAt', 'defined')\n   | selectattr('total',
+        'defined')\n   | selectattr('startsAt', '>=', window_start | as_datetime)\n
+        \  | selectattr('startsAt', '<', window_end | as_datetime)\n   | map('dict',
+        attribute=['startsAt','total'])\n   | list\n}}\n"
+      sequence:
+      - variables:
+          start: '{{ repeat.item.startsAt | as_datetime }}'
+          window: "{% set w = [] %} {% set ws = start %} {% set we = start + timedelta(hours=4)
+            %} {% for item in merged %}\n  {% if item is mapping and 'startsAt' in
+            item and 'total' in item %}\n    {% set dt = item.startsAt | as_datetime
+            %}\n    {% if dt >= ws and dt < we %}\n      {% set w = w + [{'dt': dt,
+            'price': item.total}] %}\n    {% endif %}\n  {% endif %}\n{% endfor %}
+            {{ w }}\n"
+          window_length: '{{ window | length }}'
+      - if:
+        - condition: template
+          value_template: '{{ window_length == steps }}'
+        then:
+        - variables:
+            cost: '{{ window | map(attribute=''price'') | sum }}'
+        - if:
+          - condition: template
+            value_template: '{{ cost < best_cost }}'
+          then:
+          - variables:
+              best_cost: '{{ cost }}'
+              best_start: '{{ start }}'
+  - variables:
+      result: '{{ best_start }}'

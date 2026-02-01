@@ -1,0 +1,58 @@
+---
+card_my_number:
+  variables:
+    step_size: 0.5
+    ulm_card_input_number_name: "[[[ return entity.attributes.friendly_name ]]]"
+
+  show_icon: false
+  show_name: false
+  show_label: false
+  triggers_update: "all"
+
+  styles:
+    card:
+      - border-radius: var(--border-radius)
+      - box-shadow: var(--box-shadow)
+      - padding: 12px
+
+  custom_fields:
+
+    ############################################################
+    # Header (icon + name)
+    ############################################################
+
+    item1:
+      card:
+        type: custom:button-card
+        entity: "[[[ return entity.entity_id ]]]"
+        name: "[[[ return variables.ulm_card_input_number_name ]]]"
+        template:
+          - icon_info
+
+    ############################################################
+    # Body: decrement, value, increment
+    ############################################################
+
+    item2:
+      card:
+        type: custom:button-card
+        template: list_3_items
+
+        custom_fields:
+
+          ########################################################
+          # DOWN BUTTON
+          ########################################################
+          item1:
+            card:
+              type: custom:button-card
+              template: widget_icon
+              icon: mdi:minus
+              tap_action:
+                action: call-service
+                service: input.set_value
+                target:
+                  entity_id: "[[[ return entity.entity_id ]]]"
+                data:
+                  value: >
+                    [[[

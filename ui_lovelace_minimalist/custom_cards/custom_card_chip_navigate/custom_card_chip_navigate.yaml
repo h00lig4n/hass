@@ -1,0 +1,36 @@
+custom_card_chip_navigate:
+  template:
+    - card_navigate
+    - ulm_translation_engine
+
+  show_icon: true
+  show_name: true
+
+  icon: "[[[ return variables.ulm_card_navigate_icon ]]]"
+  name: "[[[ return variables.ulm_card_navigate_name ]]]"
+
+  tap_action:
+    action: navigate
+    navigation_path: "[[[ return variables.ulm_card_navigate_path ]]]"
+
+  variables:
+    # UL-M already reads this variable for icon coloring
+    ulm_card_navigate_icon_color: "[[[ return variables.ulm_card_navigate_color || 'var(--primary-text-color)' ]]]"
+
+  styles:
+    grid:
+      - grid-template-areas: "'i' 'n'"
+      - grid-template-columns: 1fr
+      - grid-template-rows: auto auto
+      - align-items: center
+      - justify-items: center
+    name:
+      - font-family: "Inter, sans-serif"
+      - font-weight: 800
+      - font-size: 12px
+      - letter-spacing: 0.25px
+      - line-height: 20px
+      - color: var(--primary-text-color)
+    icon:
+      - margin-bottom: 6px
+      # Do not override color here; UL-M uses ulm_card_navigate_icon_color

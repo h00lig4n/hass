@@ -1,0 +1,17 @@
+title: "Printer"
+path: "printer"
+subview: true
+cards:
+  - type: "custom:button-card"
+    template: chip_back
+    variables:
+      ulm_chip_back_path: /ui-lovelace-minimalist/home
+  - type: "custom:button-card"
+    template: custom_card_mpse_printer
+    entity: sensor.lexmark_mc2425adw
+    variables:
+      ulm_card_printer_name: Lexmark MC2425adw
+      ulm_card_printer_black_name: sensor.lexmark_mc2425adw_black
+      ulm_card_printer_yellow_name: sensor.lexmark_mc2425adw_yellow
+      ulm_card_printer_cyan_name: sensor.lexmark_mc2425adw_cyan
+      ulm_card_printer_magenta_name: sensor.lexmark_mc2425adw_magenta

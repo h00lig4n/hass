@@ -1,0 +1,150 @@
+title: "Vacuum"
+path: "vacuum"
+subview: true
+cards:
+  # Navigation Stack
+  - type: horizontal-stack
+    cards:
+      - type: "custom:button-card"
+        template: chip_back
+        variables:
+          ulm_chip_back_path: /ui-lovelace-minimalist/home
+
+  # Vacuum Room Buttons
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: 'custom:button-card'
+        template: card_script
+        variables:
+          ulm_card_script_title: Dock
+          ulm_card_script_icon: 'mdi:dock-bottom'
+        tap_action:
+          action: vacuum.return_to_base
+      - type: 'custom:button-card'
+        template: card_script
+        variables:
+          ulm_card_script_title: Kitchen
+          ulm_card_script_icon: 'mdi:stove'
+        tap_action:
+          action: call-service
+          service: script.1638472340200
+          service_data:
+            room: kitchen
+      - type: 'custom:button-card'
+        template: card_script
+        variables:
+          ulm_card_script_title: Hall
+          ulm_card_script_icon: 'mdi:robot-vacuum'
+        tap_action:
+          action: call-service
+          service: script.1638472340200
+          service_data:
+            room: hall
+      - type: 'custom:button-card'
+        template: card_script
+        variables:
+          ulm_card_script_title: Entrance
+          ulm_card_script_icon: 'mdi:door'
+        tap_action:
+          action: call-service
+          service: script.1638472340200
+          service_data:
+            room: entrance_hall
+      - type: 'custom:button-card'
+        template: card_script
+        variables:
+          ulm_card_script_title: Lounge
+          ulm_card_script_icon: 'mdi:sofa'
+        tap_action:
+          action: call-service
+          service: script.1638472340200
+          service_data:
+            room: living_room
+      - type: 'custom:button-card'
+        template: card_script
+        variables:
+          ulm_card_script_title: Bedroom
+          ulm_card_script_icon: 'mdi:bed-king'
+        tap_action:
+          action: call-service
+          service: script.1638472340200
+          service_data:
+            room: master_bedroom
+
+  - type: horizontal-stack
+    cards:
+      - type: conditional
+        conditions:
+          - condition: numeric_state
+            entity: sensor.eve_filter_remaining
+            below: 180000
+        card:
+          type: 'custom:button-card'
+          template: card_generic_swap
+          entity: sensor.eve_filter_remaining
+          variables:
+            ulm_card_generic_swap_name: "Reset Filter"
+            ulm_card_generic_swap_icon: mdi:air-filter
+            ulm_card_generic_swap_color: var(--color-red)
+            ulm_card_generic_swap_force_background_color: true
+          tap_action:
+            action: call-service
+            service: button.press
+            data:
+              entity_id: button.eve_reset_filter
+          hold_action:
+            action: none
+      - type: conditional
+        conditions:
+          - condition: numeric_state
+            entity: sensor.eve_main_brush_remaining
+            below: 180000
+        card:
+          type: 'custom:button-card'
+          template: card_generic_swap
+          entity: sensor.eve_main_brush_remaining
+          variables:
+            ulm_card_generic_swap_name: "Reset Main Brush"
+            ulm_card_generic_swap_icon: mdi:brush
+            ulm_card_generic_swap_color: var(--color-red)    
+            ulm_chip_mdi_icon_only_icon: mdi:brush
+            ulm_chip_mdi_icon_only_entity: sensor.eve_main_brush_remaining
+          tap_action:
+            action: call-service
+            service: button.press
+            data:
+              entity_id: button.eve_reset_main_brush
+          hold_action:
+            action: none
+      - type: conditional
+        conditions:
+          - condition: numeric_state
+            entity: sensor.eve_main_brush_remaining
+            below: 180000
+        card:
+          type: 'custom:button-card'
+          template: card_generic_swap
+          variables:
+            ulm_chip_mdi_icon_only_icon: mdi:brush
+            ulm_chip_mdi_icon_only_entity: sensor.eve_side_brush_remaining
+          tap_action:
+            action: call-service
+            service: button.press
+            data:
+              entity_id: button.eve_reset_side_brush
+          hold_action:
+            action: none   
+
+  # Vacuum Status Card
+  - type: custom:xiaomi-vacuum-map-card
+    map_source:
+      camera: camera.xiaomi_cloud_map_extractor
+    calibration_source:
+      camera: true
+    entity: vacuum.eve
+    vacuum_platform: default
+    title: Eve
+    map_locked: true
+    two_finger_pan: false
