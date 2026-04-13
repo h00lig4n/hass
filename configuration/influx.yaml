@@ -95,4 +95,3 @@
       - sensor.media_room_computer_switch_electric_consumption_kwh
       # Vehicle Sensors
       - sensor.diesel_prices
-      - sensor.wvwzzzed4se023218_odometer
